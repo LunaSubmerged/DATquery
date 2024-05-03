@@ -57,14 +57,16 @@ db = PokemonDatabase()
 async def on_ready():
     print('Bot is ready.')
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send('Hello!')
-
-
-@bot.event
+@bot.listen("on_message")
 async def on_message(message):
-    if message.content == 'mew':
-        await message.channel.send(db.pokemonInfo(message.content))
+    if message.content == "ping":
+        await message.channel.send("pong")
+@bot.command()
+async def stats(ctx, arg):
+    await ctx.send(db.pokemonInfo(arg))
+
+@bot.command()
+async def ping(ctx):
+    await ctx.send('pong')
 # Run bot
-bot.run('gitsafe')
+bot.run('gitSafe')
