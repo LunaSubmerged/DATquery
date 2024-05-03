@@ -49,11 +49,9 @@ class PokemonDatabase:
             return f'"{name}" is not a recognised pokemon.'
 
 intents = discord.Intents.all()
-intents.typing = False  # You can adjust these based on your bot's needs
-intents.presences = False
 
 # Initialize bot with intents
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='%', intents=intents)
 db = PokemonDatabase()
 @bot.event
 async def on_ready():
