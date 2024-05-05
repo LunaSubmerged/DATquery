@@ -23,12 +23,17 @@ async def on_message(message):
     if message.content == "ping":
         await message.channel.send("pong")
 @bot.command()
+async def ping(ctx):
+    await ctx.send('pong')
+
+@bot.command()
 async def stats(ctx, arg):
     pokemon = db.getPokemon(arg)
     if pokemon != None:
       await ctx.send(embed = db.pokemonInfo(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
+
 @bot.command()
 async def weak(ctx, arg):
     pokemon = db.getPokemon(arg)
@@ -38,8 +43,9 @@ async def weak(ctx, arg):
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
 @bot.command()
-async def ping(ctx):
-    await ctx.send('pong')
+async def calc(ctx, arg):
+    await ctx.send(float(arg))
+
 # Run bot
 load_dotenv()
 discord_token = os.environ.get("DISCORD_TOKEN")
