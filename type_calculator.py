@@ -50,8 +50,6 @@ def typeNum(pokemon):
             tempList = list(typesList)
             typesList.clear()
             for count, value in enumerate(typechart):
-                print(value)
-                print(value[typesDictionary[type]])
                 typesList.append(value[typesDictionary[type]] * tempList[count])
                 
 

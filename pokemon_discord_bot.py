@@ -48,10 +48,9 @@ class PokemonDatabase:
         if l_name in self.pokemon_dictionary:
             return (self.pokemon_dictionary[l_name])
             self.pokemon_dictionary[l_name].print_function("TODO")
-        else:
-            return f'"{name}" is not a recognised pokemon.'
     def pokemonInfo(self, name):
-        return (json.dumps(self.getPokemon(name).__dict__, indent = 4))
+        if self.getPokemon(name) != None:
+          return (json.dumps(self.getPokemon(name).__dict__, indent = 4))
 
 
 
@@ -71,10 +70,16 @@ async def on_message(message):
         await message.channel.send("pong")
 @bot.command()
 async def stats(ctx, arg):
-    await ctx.send(db.pokemonInfo(arg))
+    if db.getPokemon(arg) != None:
+      await ctx.send(db.pokemonInfo(arg))
+    else: 
+        await ctx.send(f'"{arg}" is not a recognised pokemon.')
 @bot.command()
 async def weak(ctx, arg):
-    await ctx.send(type_calculator.typeNum(db.getPokemon(arg)))
+    if db.getPokemon(arg) != None:
+      await ctx.send(type_calculator.typeNum(db.getPokemon(arg)))
+    else: 
+        await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
 @bot.command()
 async def ping(ctx):
@@ -82,8 +87,5 @@ async def ping(ctx):
 # Run bot
 load_dotenv()
 discord_token = os.environ.get("DISCORD_TOKEN")
-print(type(type_calculator.typechart))
-print(type_calculator.typesDictionary.keys())
-print(db.pokemon_dictionary["mew"].typing)
 bot.run(discord_token)
 
