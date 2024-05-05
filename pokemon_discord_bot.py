@@ -1,11 +1,14 @@
 import discord
-from discord.ext import commands
 import requests
 import csv
 import json
 import inflection
+import type_calculator
+import os
 
+from dotenv import load_dotenv
 from io import StringIO
+from discord.ext import commands
 
 class Pokemon:
     def __init__(self, **fields):
@@ -38,15 +41,20 @@ class PokemonDatabase:
             else:
                 self.pokemon_dictionary[name.lower()] = pokemon
 
-    def pokemonInfo(self, name):
+    def getPokemon(self, name):
         l_name = name.lower()
         if l_name.startswith("mega"):
             pass
         if l_name in self.pokemon_dictionary:
-            return (json.dumps(self.pokemon_dictionary[l_name].__dict__, indent = 4))
+            return (self.pokemon_dictionary[l_name])
             self.pokemon_dictionary[l_name].print_function("TODO")
         else:
             return f'"{name}" is not a recognised pokemon.'
+    def pokemonInfo(self, name):
+        return (json.dumps(self.getPokemon(name).__dict__, indent = 4))
+
+
+
 
 intents = discord.Intents.all()
 
@@ -64,9 +72,18 @@ async def on_message(message):
 @bot.command()
 async def stats(ctx, arg):
     await ctx.send(db.pokemonInfo(arg))
+@bot.command()
+async def weak(ctx, arg):
+    await ctx.send(type_calculator.typeNum(db.getPokemon(arg)))
 
 @bot.command()
 async def ping(ctx):
     await ctx.send('pong')
 # Run bot
-bot.run('gitSafe')
+load_dotenv()
+discord_token = os.environ.get("DISCORD_TOKEN")
+print(type(type_calculator.typechart))
+print(type_calculator.typesDictionary.keys())
+print(db.pokemon_dictionary["mew"].typing)
+bot.run(discord_token)
+
