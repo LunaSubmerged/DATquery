@@ -45,8 +45,7 @@ class PokemonDatabase:
         if l_name in self.pokemon_dictionary:
             return (self.pokemon_dictionary[l_name])
             self.pokemon_dictionary[l_name].print_function("TODO")
-    def pokemonInfo(self, name):
-        pokemon = self.getPokemon(name)
+    def pokemonInfo(self, pokemon):
         if pokemon != None:
           embed = discord.Embed(
               color = discord.Color.dark_teal(),

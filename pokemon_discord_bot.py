@@ -24,14 +24,16 @@ async def on_message(message):
         await message.channel.send("pong")
 @bot.command()
 async def stats(ctx, arg):
-    if db.getPokemon(arg) != None:
-      await ctx.send(embed = db.pokemonInfo(arg))
+    pokemon = db.getPokemon(arg)
+    if pokemon != None:
+      await ctx.send(embed = db.pokemonInfo(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 @bot.command()
 async def weak(ctx, arg):
-    if db.getPokemon(arg) != None:
-      await ctx.send(type_calculator.typeNum(db.getPokemon(arg)))
+    pokemon = db.getPokemon(arg)
+    if pokemon != None:
+      await ctx.send(embed = type_calculator.typeNum(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 

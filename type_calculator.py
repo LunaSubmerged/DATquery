@@ -1,3 +1,5 @@
+import discord
+
 typesDictionary = {
         "bug": 0,
         "dark": 1,
@@ -51,6 +53,36 @@ def typeNum(pokemon):
             typesList.clear()
             for count, value in enumerate(typechart):
                 typesList.append(value[typesDictionary[type]] * tempList[count])
-                
+        if pokemon != None:
+          embed = discord.Embed(
+              color = discord.Color.dark_teal(),
+              title = pokemon.name,
+              description = pokemon.typing
+        )
+        sprite = pokemon.name.lower()
+        if pokemon.sprite_alias != "":
+            sprite = pokemon.sprite_alias.lower()
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + sprite + ".png")
+        weak = ""
+        resist = ""
+        immunity = ""
+        for type in typesDictionary.keys():
+            localType = typesList[typesDictionary[type]]
+            if localType == 2:
+                weak += ", " + type.capitalize()
+            elif localType >= 4:
+                weak += ", **" + type.capitalize() + "**"
+            elif localType == 0:
+                immunity += ", " + type.capitalize()
+            elif localType == 0.5:
+                resist += ", " + type.capitalize()
+            elif localType <= 0.25:
+                resist += ", **" + type.capitalize() + "**"
+        weak = weak[1:]
+        resist = resist[1:]
+        immunity = immunity[1:]    
+        embed.add_field(name="Weaknesses", value = weak)
+        embed.add_field(name="Resistances", value = resist, inline= False)
+        embed.add_field(name="Immunities", value = immunity, inline= False)
 
-    return typesList
+    return (embed)
