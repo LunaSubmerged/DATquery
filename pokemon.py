@@ -4,6 +4,8 @@ import inflection
 from io import StringIO
 import discord
 
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
@@ -40,11 +42,12 @@ class PokemonDatabase:
 
     def getPokemon(self, name):
         l_name = name.lower()
-        if l_name.startswith("mega"):
-            pass
-        if l_name in self.pokemon_dictionary:
-            return (self.pokemon_dictionary[l_name])
-            self.pokemon_dictionary[l_name].print_function("TODO")
+        fuzzyName = process.extract(name, self.pokemon_dictionary, limit = 1)
+        print(fuzzyName)
+
+        if fuzzyName[2] in self.pokemon_dictionary:
+            return (self.pokemon_dictionary[fuzzyName])
+            self.pokemon_dictionary[fuzzyName].print_function("TODO")
     def pokemonInfo(self, pokemon):
         if pokemon != None:
           embed = discord.Embed(
