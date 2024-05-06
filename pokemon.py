@@ -42,10 +42,10 @@ class PokemonDatabase:
 
     def getPokemon(self, name):
         l_name = name.lower()
-        fuzzyName = process.extract(name, self.pokemon_dictionary, limit = 1)
-        print(fuzzyName)
+        fuzzy = process.extract(name, self.pokemon_dictionary.keys(), limit = 1)
+        fuzzyName = fuzzy[0][0]
 
-        if fuzzyName[2] in self.pokemon_dictionary:
+        if fuzzyName in self.pokemon_dictionary:
             return (self.pokemon_dictionary[fuzzyName])
             self.pokemon_dictionary[fuzzyName].print_function("TODO")
     def pokemonInfo(self, pokemon):
