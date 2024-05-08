@@ -15,6 +15,8 @@ class Pokemon:
 
 class PokemonDatabase:
     def __init__(self):
+        self.populateDb()
+    def populateDb(self):
         self.pokemon_dictionary = {}
 
         dat = requests.get("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402")
