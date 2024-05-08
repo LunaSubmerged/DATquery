@@ -2,6 +2,7 @@ import discord
 import type_calculator
 import os
 import pokemon
+import random
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -45,6 +46,19 @@ async def weak(ctx, arg):
 @bot.command()
 async def calc(ctx, arg):
     await ctx.send(float(arg))
+
+@bot.command()
+async def roll(ctx,arg):
+    index_of_d = arg.lower().index('d')
+    if index_of_d == 0:
+        await ctx.send(random.randint(1,int(arg[index_of_d+1:])))
+    else:
+        output = []
+        for x in range(int(arg[:index_of_d])):
+            output.append(random.randint(1,int(arg[index_of_d+1:])))
+        str_output = str(output)
+        str_output = str_output[1:-1]
+        await ctx.send(str_output)
 
 # Run bot
 load_dotenv()
