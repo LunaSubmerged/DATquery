@@ -2,6 +2,7 @@ import discord
 import type_calculator
 import os
 import pokemon
+import abilities
 import random
 
 from dotenv import load_dotenv
@@ -10,8 +11,8 @@ from discord.ext import commands
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
 bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
-db = pokemon.PokemonDatabase()
-
+pokemonDb = pokemon.PokemonDatabase()
+abilityDb = abilities.AbilityDatabase()
 
 @bot.event
 async def on_ready():
@@ -27,19 +28,28 @@ async def ping(ctx):
 
 @bot.command(help = "Input a name to show the stats of a pokemon.")
 async def stats(ctx, arg):
-    pokemon = db.getPokemon(arg)
+    pokemon = pokemonDb.getPokemon(arg)
     if pokemon != None:
-      await ctx.send(embed = db.pokemonInfo(pokemon))
+      await ctx.send(embed = pokemonDb.pokemonInfo(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
 @bot.command(help = "Input a name to show the type chart of a pokemon.")
 async def weak(ctx, arg):
-    pokemon = db.getPokemon(arg)
+    pokemon = pokemonDb.getPokemon(arg)
     if pokemon != None:
       await ctx.send(embed = type_calculator.typeNum(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
+
+@bot.command(help = "Input a name to show the description of an ability.")
+async def ability(ctx, arg):
+    ability = abilityDb.getAbility(arg)
+    if ability != None:
+        await ctx.send(embed = abilityDb.abilityInfo(ability))
+    else:
+        await ctx.send(f'"{arg}" is not a recognised ability.')
+
 
 @bot.command()
 async def calc(ctx, arg):
