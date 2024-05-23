@@ -3,7 +3,11 @@ import type_calculator
 import os
 import pokemon
 import abilities
+import moves
 import random
+import schedule
+import time
+import threading
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -12,7 +16,24 @@ intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
 bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
 pokemonDb = pokemon.PokemonDatabase()
-abilityDb = abilities.AbilityDatabase()
+abilitiesDb = abilities.AbilityDatabase()
+movesDb = moves.MoveDatabase()
+
+
+def dbRefresh():
+    pokemonDb.populateDb()
+    abilitiesDb.populateDb()
+    movesDb.populateDb()
+
+
+
+def dbRefreshScheduler():
+    schedule.every().day.at("00:00:00").do(dbRefresh)
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+
 
 @bot.event
 async def on_ready():
@@ -44,9 +65,9 @@ async def weak(ctx, arg):
 
 @bot.command(help = "Input a name to show the description of an ability.")
 async def ability(ctx, arg):
-    ability = abilityDb.getAbility(arg)
+    ability = abilitiesDb.getAbility(arg)
     if ability != None:
-        await ctx.send(embed = abilityDb.abilityInfo(ability))
+        await ctx.send(embed = abilitiesDb.abilityInfo(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
@@ -72,6 +93,8 @@ async def roll(ctx,arg):
 
 # Run bot
 # Initialize bot with intents
+dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
+dbRefreshThreads.start()
 load_dotenv()
 discord_token = os.environ.get("DISCORD_TOKEN")
 bot.run(discord_token)
