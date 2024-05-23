@@ -36,7 +36,3 @@ class MoveDatabase:
                 sanitized_row["Description"] = rows[count+1]["Type"]
                 move = Move(**sanitized_row)
                 self.moves_dictionary[row["Name"].lower()] = move
-                print(sanitized_row)
-
-movesDatabase = MoveDatabase()
-print(movesDatabase.moves_dictionary["absorb"].type)
