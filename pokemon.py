@@ -50,6 +50,8 @@ class PokemonDatabase:
         if fuzzyName in self.pokemon_dictionary:
             return (self.pokemon_dictionary[fuzzyName])
             self.pokemon_dictionary[fuzzyName].print_function("TODO")
+
+            
     def pokemonInfo(self, pokemon):
         if pokemon != None:
           embed = discord.Embed(
