@@ -14,7 +14,7 @@ from discord.ext import commands
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
-bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
+bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_command)
 pokemonDb = pokemon.PokemonDatabase()
 abilitiesDb = abilities.AbilityDatabase()
 movesDb = moves.MoveDatabase()
@@ -64,12 +64,20 @@ async def weak(ctx, arg):
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
 @bot.command(help = "Input a name to show the description of an ability.")
-async def ability(ctx, arg):
+async def ability(ctx, *,  arg):
     ability = abilitiesDb.getAbility(arg)
     if ability != None:
         await ctx.send(embed = abilitiesDb.abilityInfo(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
+
+@bot.command(help= "Input a name to show the description of a move.")
+async def move(ctx, *, arg):
+    move = movesDb.getMove(arg)
+    if move != None:
+        await ctx.send(embed = movesDb.moveInfo(move))
+    else:
+        await ctx.sent(f'"{arg}" is not a recognised ability.')
 
 
 @bot.command()
