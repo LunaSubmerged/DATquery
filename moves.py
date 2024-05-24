@@ -43,7 +43,7 @@ class MoveDatabase:
                 sanitized_row = {}
                 for key in row.keys():
                     sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
-                sanitized_row["description"] = rows[count+1]["Type"]
+                sanitized_row["description"] = rows[count+1]["Type"].replace("â", "-")
                 move = Move(**sanitized_row)
                 self.moves_dictionary[row["Name"].lower()] = move
 

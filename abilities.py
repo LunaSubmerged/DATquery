@@ -26,7 +26,7 @@ class AbilityDatabase:
             if row["Ability"] != "":
                 local_ability = {}
                 local_ability["name"] = row["Ability"][1:]
-                local_ability["description"] = row["Description"]
+                local_ability["description"] = row["Description"].replace("â", "-")
                 ability = Ability(**local_ability)
                 self.abilities_dictionary[local_ability["name"].lower()] = ability
             
