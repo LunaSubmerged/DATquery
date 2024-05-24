@@ -4,6 +4,7 @@ import os
 import pokemon
 import abilities
 import moves
+import items
 import random
 import schedule
 import time
@@ -18,6 +19,7 @@ bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_comman
 pokemonDb = pokemon.PokemonDatabase()
 abilitiesDb = abilities.AbilityDatabase()
 movesDb = moves.MoveDatabase()
+itemsDb = items.ItemDatabase()
 
 
 def dbRefresh():
@@ -70,14 +72,20 @@ async def ability(ctx, *,  arg):
         await ctx.send(embed = abilitiesDb.abilityInfo(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
-
+@bot.command(help = "Input a name to show the description of an item.")
+async def item(ctx, *, arg):
+    item = itemsDb.getItem(arg)
+    if item != None:
+        await ctx.send(embed = itemsDb.ItemInfo(item))
+    else:
+        await ctx.sent(f'"{arg}" is not a recognised item.')
 @bot.command(help= "Input a name to show the description of a move.")
 async def move(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move != None:
         await ctx.send(embed = movesDb.moveInfo(move))
     else:
-        await ctx.sent(f'"{arg}" is not a recognised ability.')
+        await ctx.sent(f'"{arg}" is not a recognised move.')
 
 
 @bot.command()
