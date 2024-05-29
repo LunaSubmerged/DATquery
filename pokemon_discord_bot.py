@@ -12,6 +12,7 @@ import threading
 
 from dotenv import load_dotenv
 from discord.ext import commands
+from calculator import calculate
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
@@ -88,9 +89,10 @@ async def move(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
 
-@bot.command()
-async def calc(ctx, arg):
-    await ctx.send(float(arg))
+@bot.command(help = "evaluate a maths expression")
+async def calc(ctx, *, arg):
+    answer = calculate(arg)
+    await ctx.send(f'{arg} = {answer}')
 
 @bot.command(help = "roll a number of dice in the format xdy, x = number of dice rolled, y = sides of the dice.")
 async def roll(ctx,arg):
