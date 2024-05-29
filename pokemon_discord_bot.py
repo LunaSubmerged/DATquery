@@ -92,7 +92,10 @@ async def move(ctx, *, arg):
 @bot.command(help = "evaluate a maths expression")
 async def calc(ctx, *, arg):
     answer = calculate(arg)
-    await ctx.send(f'{arg} = {answer}')
+    if answer.startswith("is not a valid expression."):
+        await ctx.send(f'"{arg}" {answer}')
+    else:
+        await ctx.send(f'{arg} = {answer}')
 
 @bot.command(help = "roll a number of dice in the format xdy, x = number of dice rolled, y = sides of the dice.")
 async def roll(ctx,arg):
