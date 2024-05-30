@@ -1,0 +1,1 @@
+worker: python pokemon_discord_bot.py
