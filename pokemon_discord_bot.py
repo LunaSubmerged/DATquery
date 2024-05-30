@@ -89,7 +89,7 @@ async def move(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
 
-@bot.command(help = "evaluate a maths expression")
+@bot.command(help = "evaluate a maths expression. Use '**' for exponent instead of '^'")
 async def calc(ctx, *, arg):
     answer = calculate(arg)
     if answer.startswith("is not a valid expression."):
