@@ -9,6 +9,7 @@ import random
 import schedule
 import time
 import threading
+import logging
 
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -40,7 +41,7 @@ def dbRefreshScheduler():
 
 @bot.event
 async def on_ready():
-    print('Bot is ready.')
+    logging.info("Bot is ready.")
 
 @bot.listen("on_message")
 async def on_message(message):
@@ -114,6 +115,7 @@ async def roll(ctx,arg):
 
 # Run bot
 # Initialize bot with intents
+logging.basicConfig(level=logging.INFO)
 dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
 dbRefreshThreads.start()
 load_dotenv()
