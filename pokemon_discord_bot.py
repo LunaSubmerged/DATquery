@@ -9,9 +9,11 @@ import random
 import schedule
 import time
 import threading
+import logging
 
 from dotenv import load_dotenv
 from discord.ext import commands
+from calculator import calculate
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
@@ -39,7 +41,7 @@ def dbRefreshScheduler():
 
 @bot.event
 async def on_ready():
-    print('Bot is ready.')
+    logging.info("Bot is ready.")
 
 @bot.listen("on_message")
 async def on_message(message):
@@ -88,9 +90,13 @@ async def move(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
 
-@bot.command()
-async def calc(ctx, arg):
-    await ctx.send(float(arg))
+@bot.command(help = "evaluate a maths expression. Use '**' for exponent instead of '^'")
+async def calc(ctx, *, arg):
+    answer = calculate(arg)
+    if answer.startswith("is not a valid expression."):
+        await ctx.send(f'"{arg}" {answer}')
+    else:
+        await ctx.send(f'{arg} = {answer}')
 
 @bot.command(help = "roll a number of dice in the format xdy, x = number of dice rolled, y = sides of the dice.")
 async def roll(ctx,arg):
@@ -109,6 +115,7 @@ async def roll(ctx,arg):
 
 # Run bot
 # Initialize bot with intents
+logging.basicConfig(level=logging.INFO)
 dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
 dbRefreshThreads.start()
 load_dotenv()

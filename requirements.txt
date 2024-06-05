@@ -1,0 +1,12 @@
+discord.py==2.3.2        
+fuzzywuzzy==0.18.0
+inflection==0.5.1
+Levenshtein==0.25.1
+numexpr==2.10.0
+numpy==1.26.4
+python-dotenv==1.0.1
+python-Levenshtein==0.25.1
+rapidfuzz==3.9.0
+requests==2.31.0
+schedule==1.2.1
+thefuzz==0.22.1
