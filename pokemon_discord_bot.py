@@ -20,12 +20,12 @@ pokemonDb = pokemon.PokemonDatabase()
 abilitiesDb = abilities.AbilityDatabase()
 movesDb = moves.MoveDatabase()
 itemsDb = items.ItemDatabase()
+databases = [pokemonDb, abilitiesDb, movesDb, itemsDb]
 
 
 def dbRefresh():
-    pokemonDb.refresh_db()
-    abilitiesDb.refresh_db()
-    movesDb.refresh_db()
+    for db in databases:
+        db.refresh_db()
 
 
 
@@ -50,7 +50,7 @@ async def ping(ctx):
     await ctx.send('pong')
 
 @bot.command(help = "Input a name to show the stats of a pokemon.")
-async def stats(ctx, arg):
+async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon != None:
       await ctx.send(embed = pokemonDb.pokemonInfo(pokemon))
@@ -58,7 +58,7 @@ async def stats(ctx, arg):
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
 @bot.command(help = "Input a name to show the type chart of a pokemon.")
-async def weak(ctx, arg):
+async def weak(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon != None:
       await ctx.send(embed = type_calculator.typeNum(pokemon))
