@@ -1,11 +1,13 @@
 import requests
 import csv
 import inflection
-from io import StringIO
 import discord
 
+from io import StringIO
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+from database import Database
+
 class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
@@ -13,43 +15,38 @@ class Pokemon:
         pass
 
 
-class PokemonDatabase:
-    def __init__(self):
-        self.populateDb()
-    def populateDb(self):
-        self.pokemon_dictionary = {}
+class PokemonDatabase(Database):
+    def __init__(self):        
+        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402")
+       
+       
+    def _build_dictionary(self, row):
+        name = row["Name"]
+        row.pop("")
+        row.pop("Reference Functions")
+        row.pop("Bot Notation Column")
+        row["SignatureMoveOrMoves"] = row.pop("Signature Move or Moves")
+        sanitized_row = {}
+        for key in row.keys():
+            sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
+        sanitized_row["defence"] = row["Def"]
+        sanitized_row.pop("def")
 
-        dat = requests.get("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402")
-        csv_file = StringIO(dat.text)
-        reader = csv.DictReader(csv_file)
-
-        for row in reader:
-            name = row["Name"]
-            row.pop("")
-            row.pop("Reference Functions")
-            row.pop("Bot Notation Column")
-            row["SignatureMoveOrMoves"] = row.pop("Signature Move or Moves")
-            sanitized_row = {}
-            for key in row.keys():
-                sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
-            sanitized_row["defence"] = row["Def"]
-            sanitized_row.pop("def")
-
-            pokemon = Pokemon(**sanitized_row)
-            if sanitized_row["id"] == "Mega":
-                self.pokemon_dictionary["mega_" + name.lower()] = pokemon
-            else:
-                self.pokemon_dictionary[name.lower()] = pokemon
-            
+        pokemon = Pokemon(**sanitized_row)
+        if sanitized_row["id"] == "Mega":
+            self.dictionary["mega_" + name.lower()] = pokemon
+        else:
+            self.dictionary[name.lower()] = pokemon
+        
 
     def getPokemon(self, name):
         l_name = name.lower()
-        fuzzy = process.extract(name, self.pokemon_dictionary.keys(), limit = 1)
+        fuzzy = process.extract(name, self.dictionary.keys(), limit = 1)
         fuzzyName = fuzzy[0][0]
 
-        if fuzzyName in self.pokemon_dictionary:
-            return (self.pokemon_dictionary[fuzzyName])
-            self.pokemon_dictionary[fuzzyName].print_function("TODO")
+        if fuzzyName in self.dictionary:
+            return (self.dictionary[fuzzyName])
+            self.dictionary[fuzzyName].print_function("TODO")
 
             
     def pokemonInfo(self, pokemon):

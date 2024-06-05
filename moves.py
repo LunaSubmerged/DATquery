@@ -4,6 +4,8 @@ import inflection
 import discord
 import json
 
+from database import Database
+from constants import BULLET
 from io import StringIO
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -15,21 +17,17 @@ class Move:
     def __str__(self):
         return json.dumps(self.__dict__, indent=4)
 
-class MoveDatabase:
+class MoveDatabase(Database):
     def __init__(self):
-        self.populateDb()
+        self.bullet_space = BULLET + " "
+        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=1023445923")
+        
 
-
-    def populateDb(self):
-        self.moves_dictionary = {}
-        dat = requests.get("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=1023445923")
-        csv_file = StringIO(dat.text)
-        reader = csv.DictReader(csv_file)
-        rows = list(reader)
+    def _process_rows(self, rows):       
         for count, row in enumerate(rows):
-            if(row["â\x97\x8f "]).startswith("-"):
-                row["Name"] = row["â\x97\x8f "][1:]
-                row.pop("â\x97\x8f ")
+            if(row[self.bullet_space]).startswith("-"):
+                row["Name"] = row[self.bullet_space][1:]
+                row.pop(self.bullet_space)
                 row.pop("")
                 row.pop("Combo Lv.")
                 row["effect"] = row["Effect%"]
@@ -43,18 +41,18 @@ class MoveDatabase:
                 sanitized_row = {}
                 for key in row.keys():
                     sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
-                sanitized_row["description"] = rows[count+1]["Type"].replace("â", "-")
+                sanitized_row["description"] = rows[count+1]["Type"]
                 move = Move(**sanitized_row)
-                self.moves_dictionary[row["Name"].lower()] = move
+                self.dictionary[row["Name"].lower()] = move
 
     
     def getMove(self, name):
         l_name = name.lower()
-        fuzzy = process.extract(name, self.moves_dictionary.keys(), limit = 1)
+        fuzzy = process.extract(name, self.dictionary.keys(), limit = 1)
         fuzzyName = fuzzy[0][0]
 
-        if fuzzyName in self.moves_dictionary:
-            return (self.moves_dictionary[fuzzyName])
+        if fuzzyName in self.dictionary:
+            return (self.dictionary[fuzzyName])
 
     def emptyDiscordSpace(self, int):
         return "\u1CBC" * int

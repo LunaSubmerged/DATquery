@@ -23,9 +23,9 @@ itemsDb = items.ItemDatabase()
 
 
 def dbRefresh():
-    pokemonDb.populateDb()
-    abilitiesDb.populateDb()
-    movesDb.populateDb()
+    pokemonDb.refresh_db()
+    abilitiesDb.refresh_db()
+    movesDb.refresh_db()
 
 
 
