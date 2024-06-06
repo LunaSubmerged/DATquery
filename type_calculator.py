@@ -59,10 +59,7 @@ def typeNum(pokemon):
               title = pokemon.name,
               description = pokemon.typing
         )
-        sprite = pokemon.name.lower()
-        if pokemon.sprite_alias != "":
-            sprite = pokemon.sprite_alias.lower()
-        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + sprite + ".png")
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
         weak = ""
         resist = ""
         immunity = ""

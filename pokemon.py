@@ -31,6 +31,8 @@ class PokemonDatabase(Database):
             sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
         sanitized_row["defence"] = row["Def"]
         sanitized_row.pop("def")
+        if sanitized_row["sprite_alias"] == "":
+            sanitized_row["sprite_alias"] = name.lower().replace(" ", "")
 
         pokemon = Pokemon(**sanitized_row)
         if sanitized_row["id"] == "Mega":
@@ -56,10 +58,7 @@ class PokemonDatabase(Database):
               title = pokemon.name,
               description = pokemon.typing
           )
-          sprite = pokemon.name.lower().replace(" ", "")
-          if pokemon.sprite_alias != "":
-              sprite = pokemon.sprite_alias.lower()
-          embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + sprite + ".png")
+          embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
           embed.add_field(name="Abilities", value = pokemon.abilities)
           embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
           line1 = "HP: " + pokemon.hp
