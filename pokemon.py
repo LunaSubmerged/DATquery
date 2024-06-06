@@ -56,7 +56,7 @@ class PokemonDatabase(Database):
               title = pokemon.name,
               description = pokemon.typing
           )
-          sprite = pokemon.name.lower()
+          sprite = pokemon.name.lower().replace(" ", "")
           if pokemon.sprite_alias != "":
               sprite = pokemon.sprite_alias.lower()
           embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + sprite + ".png")
