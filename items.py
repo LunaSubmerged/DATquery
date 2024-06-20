@@ -3,6 +3,7 @@ import csv
 import inflection
 from io import StringIO
 import discord
+import utils
 
 from database import Database
 from fuzzywuzzy import fuzz
@@ -28,11 +29,7 @@ class ItemDatabase(Database):
             
 
     def getItem(self, name):
-        l_name = name.lower()
-        fuzzy = process.extract(name, self.dictionary.keys(), limit = 1)
-        fuzzyName = fuzzy[0][0]
-        if fuzzyName in self.dictionary:
-            return (self.dictionary[fuzzyName])
+        return utils.fuzzySearch(name, self.dictionary)
 
 
     def ItemInfo(self, item):

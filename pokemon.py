@@ -2,15 +2,15 @@ import requests
 import csv
 import inflection
 import discord
+import utils
 
 from io import StringIO
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 from database import Database
 
 class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
+        self.movesList = None
     def print_function(self, string):
         pass
 
@@ -42,13 +42,7 @@ class PokemonDatabase(Database):
         
 
     def getPokemon(self, name):
-        l_name = name.lower()
-        fuzzy = process.extract(name, self.dictionary.keys(), limit = 1)
-        fuzzyName = fuzzy[0][0]
-
-        if fuzzyName in self.dictionary:
-            return (self.dictionary[fuzzyName])
-            self.dictionary[fuzzyName].print_function("TODO")
+        return utils.fuzzySearch(name, self.dictionary)
 
             
     def pokemonInfo(self, pokemon):

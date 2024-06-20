@@ -3,13 +3,11 @@ import csv
 import inflection
 import discord
 import json
+import utils
 
 from database import Database
 from constants import BULLET
 from io import StringIO
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
-
 class Move:
     def __init__(self, **fields):
         self.__dict__.update(fields)
@@ -47,12 +45,7 @@ class MoveDatabase(Database):
 
     
     def getMove(self, name):
-        l_name = name.lower()
-        fuzzy = process.extract(name, self.dictionary.keys(), limit = 1)
-        fuzzyName = fuzzy[0][0]
-
-        if fuzzyName in self.dictionary:
-            return (self.dictionary[fuzzyName])
+        return utils.fuzzySearch(name, self.dictionary)
 
     def emptyDiscordSpace(self, int):
         return "\u1CBC" * int

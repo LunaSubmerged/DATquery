@@ -30,3 +30,12 @@ for header in rows[0]:
     keys.append(header)
 print(keys)
 rows.pop(0)
+print(rows[0])
+for pokemon in rows:
+    name = pokemon[0]
+    level0MoveList = pokemon[1].splitlines()
+    level1MoveList = pokemon[2].splitlines()
+    level2MoveList = pokemon[3].splitlines()
+    level3MoveList = pokemon[4].splitlines()
+    level4MoveList = pokemon[5].splitlines()
+    print(level0MoveList)

@@ -10,7 +10,10 @@ import schedule
 import time
 import threading
 import logging
+import requests
+import csv
 
+from io import StringIO
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
@@ -18,16 +21,50 @@ from calculator import calculate
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_command)
-pokemonDb = pokemon.PokemonDatabase()
-abilitiesDb = abilities.AbilityDatabase()
 movesDb = moves.MoveDatabase()
+pokemonDb = pokemon.PokemonDatabase()
+
+abilitiesDb = abilities.AbilityDatabase()
 itemsDb = items.ItemDatabase()
-databases = [pokemonDb, abilitiesDb, movesDb, itemsDb]
+databases = [abilitiesDb, movesDb,pokemonDb,itemsDb]
+
+def attachMoves():
+    data = requests.get("https://docs.google.com/spreadsheets/d/1XDqCQF4miFGGaY5tGTTAgTaZ7koKiqgPAB571fYbVt4/export?format=csv&gid=0")
+    csv_file = StringIO(data.text)
+    reader = csv.reader(csv_file)
+    rows = list(reader)
+    start = False
+    for row in rows:
+        if row[1] == "Pokemon":
+            start = True
+            continue
+        if start:
+            pokemonRow = row
+            if pokemonRow[4].startswith("No Movepool Data for this species and forme."):
+                continue
+            
+            name = pokemonRow[1]
+            level0MoveList = pokemonRow[3].splitlines()
+            level1MoveList = pokemonRow[4].splitlines()
+            level2MoveList = pokemonRow[5].splitlines()
+            level3MoveList = pokemonRow[6].splitlines()
+            level4MoveList = pokemonRow[7].splitlines()
+            if len(level0MoveList) +  len(level1MoveList) + len(level2MoveList) + len(level3MoveList) + len(level4MoveList) <= 3:
+                continue
+            pokemon = pokemonDb.getPokemon(name)
+            if pokemon.movesList is None:
+                level0MoveListFinal = [movesDb.getMove(moveName) for moveName in level0MoveList]
+                level1MoveListFinal = [movesDb.getMove(moveName) for moveName in level1MoveList]
+                level2MoveListFinal = [movesDb.getMove(moveName) for moveName in level2MoveList]
+                level3MoveListFinal = [movesDb.getMove(moveName) for moveName in level3MoveList]
+                level4MoveListFinal = [movesDb.getMove(moveName) for moveName in level4MoveList]
+                pokemon.movesList = [level0MoveListFinal,level1MoveListFinal,level2MoveListFinal,level3MoveListFinal,level4MoveListFinal]
 
 
 def dbRefresh():
     for db in databases:
         db.refresh_db()
+    attachMoves()
 
 
 
@@ -115,6 +152,7 @@ async def roll(ctx,arg):
 
 # Run bot
 # Initialize bot with intents
+attachMoves()
 logging.basicConfig(level=logging.INFO)
 dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
 dbRefreshThreads.start()
