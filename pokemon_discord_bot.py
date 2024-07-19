@@ -20,7 +20,7 @@ from calculator import calculate
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
-bot = commands.Bot(command_prefix='!', intents=intents, help_command=help_command)
+bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
 movesDb = moves.MoveDatabase()
 pokemonDb = pokemon.PokemonDatabase()
 

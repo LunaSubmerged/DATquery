@@ -25,7 +25,6 @@ class PokemonDatabase(Database):
         row.pop("")
         row.pop("Reference Functions")
         row.pop("Bot Notation Column")
-        row["SignatureMoveOrMoves"] = row.pop("Signature Move or Moves")
         sanitized_row = {}
         for key in row.keys():
             sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
@@ -61,5 +60,6 @@ class PokemonDatabase(Database):
           line4 = "Size Class: " + pokemon.size
           line5 = "Weight Class: " + pokemon.weight
           embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5,  inline= False)
+          embed.add_field(name="Signature Move", value = pokemon.signature_move_or_moves)
 
           return (embed)
