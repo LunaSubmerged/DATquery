@@ -2,6 +2,7 @@ import requests
 import csv
 import inflection
 import discord
+import constants
 
 from io import StringIO
 from fuzzywuzzy import fuzz
@@ -9,7 +10,7 @@ from fuzzywuzzy import process
 from database import Database
 
 
-data = requests.get("https://docs.google.com/spreadsheets/d/1XDqCQF4miFGGaY5tGTTAgTaZ7koKiqgPAB571fYbVt4/export?format=csv&gid=0")
+data = requests.get(constants.MOVE_POOL)
 
 csv_file = StringIO(data.text)
 reader = csv.reader(csv_file)

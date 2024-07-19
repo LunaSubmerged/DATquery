@@ -4,6 +4,7 @@ import inflection
 from io import StringIO
 import discord
 import utils
+import constants
 
 from database import Database
 from fuzzywuzzy import fuzz
@@ -17,7 +18,7 @@ class Item:
 
 class ItemDatabase(Database):
     def __init__(self):
-        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2023973583")
+        super().__init__(constants.ITEMS)
    
     def _build_dictionary(self, row):
         if row["Item"].startswith("-"):

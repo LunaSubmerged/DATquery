@@ -3,6 +3,7 @@ import csv
 import inflection
 import discord
 import utils
+import constants
 
 from io import StringIO
 from database import Database
@@ -17,7 +18,7 @@ class Pokemon:
 
 class PokemonDatabase(Database):
     def __init__(self):        
-        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=2042923402")
+        super().__init__(constants.POKEMON)
        
        
     def _build_dictionary(self, row):

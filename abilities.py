@@ -3,6 +3,7 @@ import csv
 import inflection
 from io import StringIO
 import discord
+import constants
 
 from database import Database
 from fuzzywuzzy import fuzz
@@ -16,7 +17,7 @@ class Ability:
 
 class AbilityDatabase(Database):
     def __init__(self):
-        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=1445814381")
+        super().__init__(constants.ABILITIES)
  
     def _build_dictionary(self, row):
         if row["Ability"] != "":

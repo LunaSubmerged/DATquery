@@ -4,6 +4,7 @@ import inflection
 import discord
 import json
 import utils
+import constants
 
 from database import Database
 from constants import BULLET
@@ -18,7 +19,7 @@ class Move:
 class MoveDatabase(Database):
     def __init__(self):
         self.bullet_space = BULLET + " "
-        super().__init__("https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/export?format=csv&gid=1023445923")
+        super().__init__(constants.MOVES)
         
 
     def _process_rows(self, rows):       
