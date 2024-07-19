@@ -44,7 +44,7 @@ class ConditionDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = condition.name,
-                description = condition.fluff
+                description = f"*{condition.fluff}*"
             )
             embed.add_field(name = "Description", value = condition.description, inline=False)
             embed.add_field(name = "Default Duration", value = condition.default_duration)

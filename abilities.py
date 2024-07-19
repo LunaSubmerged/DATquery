@@ -43,7 +43,7 @@ class AbilityDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = ability.name,
-                description = ability.fluff
+                description = f"*{ability.fluff}*"
             )
             embed.add_field(name = "Description", value = ability.description)
             return embed

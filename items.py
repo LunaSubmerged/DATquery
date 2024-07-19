@@ -40,7 +40,7 @@ class ItemDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = item.name,
-                description = item.fluff
+                description = f"*{item.fluff}*"
             )
             embed.add_field(name = "Description", value = item.description, inline=False)
             return embed

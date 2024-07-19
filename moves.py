@@ -64,7 +64,7 @@ class MoveDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = move.name,
-                description = move.fluff
+                description = f"*{move.fluff}*"
             )
             if move.description != "":
                 embed.add_field(name="Description", value=move.description, inline=False)
