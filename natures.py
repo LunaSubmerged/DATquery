@@ -21,7 +21,6 @@ class NatureDatabase(Database):
  
     def _build_dictionary(self, row):
         local_nature = {}
-        print(row)
         if row[0] != "" and row[0] != "Pokemon Natures":
             local_nature["name"] = row[0]
             local_nature["description"] = row[1]
