@@ -107,6 +107,14 @@ async def weak(ctx, *, arg):
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
+@bot.command(help = "Input a name to show the types of a pokemon.")
+async def types(ctx, *, arg):
+    pokemon = pokemonDb.getPokemon(arg)
+    if pokemon != None:
+      await ctx.send(embed = pokemonDb.pokemonTypes(pokemon))
+    else: 
+        await ctx.send(f'"{arg}" is not a recognised pokemon.')
+
 @bot.command(help = "Input a name to show the description of an ability.")
 async def ability(ctx, *,  arg):
     ability = abilitiesDb.getAbility(arg)

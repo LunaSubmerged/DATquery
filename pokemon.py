@@ -76,3 +76,13 @@ class PokemonDatabase(Database):
             embed.add_field(name="Traits", value = pokemon.traits)
 
           return (embed)
+    
+    def pokemonTypes(self, pokemon):
+        if pokemon != None:
+          embed = discord.Embed(
+              color = discord.Color.dark_teal(),
+              title = pokemon.name,
+              description = pokemon.typing
+          )
+          embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        return (embed)
