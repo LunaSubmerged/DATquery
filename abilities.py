@@ -23,7 +23,9 @@ class AbilityDatabase(Database):
         if row["Ability"] != "":
             local_ability = {}
             local_ability["name"] = row["Ability"][1:]
-            local_ability["description"] = row["Description"]
+            fluff, description = row["Description"].split("\n", 1)
+            local_ability["fluff"] = fluff
+            local_ability["description"] = description
             ability = Ability(**local_ability)
             self.dictionary[local_ability["name"].lower()] = ability
             
@@ -41,6 +43,7 @@ class AbilityDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = ability.name,
-                description = ability.description
+                description = ability.fluff
             )
+            embed.add_field(name = "Description", value = ability.description)
             return embed

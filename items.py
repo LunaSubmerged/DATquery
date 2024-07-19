@@ -24,7 +24,9 @@ class ItemDatabase(Database):
         if row["Item"].startswith("-"):
             local_item = {}
             local_item["name"] = row["Item"][1:]
-            local_item["description"] = row["Description"]
+            fluff, description = row["Description"].split("\n", 1)
+            local_item["fluff"] = fluff
+            local_item["description"] = description
             item = Item(**local_item)
             self.dictionary[local_item["name"].lower()] = item
             
@@ -38,6 +40,7 @@ class ItemDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = item.name,
-                description = item.description
+                description = item.fluff
             )
+            embed.add_field(name = "Description", value = item.description, inline=False)
             return embed

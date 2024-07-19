@@ -23,7 +23,9 @@ class ConditionDatabase(Database):
         if row["Condition"].startswith("-"):
             local_condition = {}
             local_condition["name"] = row["Condition"][1:]
-            local_condition["description"] = row["Description"]
+            fluff, description = row["Description"].split("\n", 1)
+            local_condition["fluff"] = fluff
+            local_condition["description"] = description
             local_condition["default_duration"] = row["Default Duration"]
             condition = Condition(**local_condition)
             self.dictionary[local_condition["name"].lower()] = condition
@@ -42,7 +44,8 @@ class ConditionDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = condition.name,
-                description = condition.description
+                description = condition.fluff
             )
+            embed.add_field(name = "Description", value = condition.description, inline=False)
             embed.add_field(name = "Default Duration", value = condition.default_duration)
             return embed

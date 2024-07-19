@@ -41,6 +41,14 @@ class MoveDatabase(Database):
                 for key in row.keys():
                     sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
                 sanitized_row["description"] = rows[count+1]["Type"]
+                if "\n" in sanitized_row["description"]:
+                    fluff, description = sanitized_row["description"].split("\n", 1)
+                    sanitized_row["fluff"]  = fluff
+                    sanitized_row["description"] = description
+                else:
+                    sanitized_row["fluff"] = sanitized_row["description"]
+                    sanitized_row["description"] = ""
+                
                 move = Move(**sanitized_row)
                 self.dictionary[row["Name"].lower()] = move
 
@@ -56,8 +64,10 @@ class MoveDatabase(Database):
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = move.name,
-                description = move.description
+                description = move.fluff
             )
+            if move.description != "":
+                embed.add_field(name="Description", value=move.description, inline=False)
             embed.add_field(name="Category", value = move.category)
             embed.add_field(name="Type", value = move.type)
             embed.add_field(name="Accuracy", value = move.acc)
