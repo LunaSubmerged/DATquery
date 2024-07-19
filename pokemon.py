@@ -30,12 +30,16 @@ class PokemonDatabase(Database):
             sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
         sanitized_row["defence"] = row["Def"]
         sanitized_row.pop("def")
+        sanitized_row["signature_move"] = sanitized_row["signature_moveor_moves"]
+        sanitized_row.pop("signature_moveor_moves")
         if sanitized_row["sprite_alias"] == "":
             sanitized_row["sprite_alias"] = name.lower().replace(" ", "")
 
         pokemon = Pokemon(**sanitized_row)
         if sanitized_row["id"] == "Mega":
             self.dictionary["mega_" + name.lower()] = pokemon
+        elif sanitized_row["id"] == "Primal":
+            self.dictionary["primal_" + name.lower()] = pokemon
         else:
             self.dictionary[name.lower()] = pokemon
         
