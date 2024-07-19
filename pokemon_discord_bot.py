@@ -13,6 +13,7 @@ import threading
 import logging
 import requests
 import csv
+import natures
 
 from io import StringIO
 from dotenv import load_dotenv
@@ -27,7 +28,8 @@ pokemonDb = pokemon.PokemonDatabase()
 abilitiesDb = abilities.AbilityDatabase()
 conditionsDb = conditions.ConditionDatabase()
 itemsDb = items.ItemDatabase()
-databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb]
+naturesDb = natures.NatureDatabase()
+databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb, naturesDb]
 
 def attachMoves():
     data = requests.get("https://docs.google.com/spreadsheets/d/1XDqCQF4miFGGaY5tGTTAgTaZ7koKiqgPAB571fYbVt4/export?format=csv&gid=0")
@@ -133,7 +135,13 @@ async def move(ctx, *, arg):
         await ctx.send(embed = movesDb.moveInfo(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
-
+@bot.command(help= "Input a name to show the description of a nature.")
+async def nature(ctx, *, arg):
+    nature = naturesDb.getNature(arg)
+    if nature != None:
+        await ctx.send(embed = naturesDb.natureInfo(nature))
+    else:
+        await ctx.sent(f'"{arg}" is not a recognised nature.')
 
 @bot.command(help = "evaluate a maths expression. Use '**' for exponent instead of '^'")
 async def calc(ctx, *, arg):
@@ -156,7 +164,14 @@ async def roll(ctx,arg):
         str_output = str_output[1:-1]
         await ctx.send(str_output)
 
-
+@bot.command()
+async def test(ctx,*,args):
+    if "," in args:
+        arg1, arg2 = args.split(',', 1)
+        print("arg1 " + arg1)
+        print("arg2 " + arg2)
+    else:
+        print("test command takes 2 pokemon with a comma between their names")
 
 # Run bot
 # Initialize bot with intents
