@@ -3,6 +3,7 @@ import type_calculator
 import os
 import pokemon
 import abilities
+import conditions
 import moves
 import items
 import random
@@ -23,10 +24,10 @@ help_command = commands.DefaultHelpCommand(no_category = "Commands")
 bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
 movesDb = moves.MoveDatabase()
 pokemonDb = pokemon.PokemonDatabase()
-
 abilitiesDb = abilities.AbilityDatabase()
+conditionsDb = conditions.ConditionDatabase()
 itemsDb = items.ItemDatabase()
-databases = [abilitiesDb, movesDb,pokemonDb,itemsDb]
+databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb]
 
 def attachMoves():
     data = requests.get("https://docs.google.com/spreadsheets/d/1XDqCQF4miFGGaY5tGTTAgTaZ7koKiqgPAB571fYbVt4/export?format=csv&gid=0")
@@ -111,6 +112,13 @@ async def ability(ctx, *,  arg):
         await ctx.send(embed = abilitiesDb.abilityInfo(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
+@bot.command(help = "Input a name to show the description of a condition.")
+async def condition(ctx, *,  arg):
+    condition = conditionsDb.getCondition(arg)
+    if condition != None:
+        await ctx.send(embed = conditionsDb.conditionInfo(condition))
+    else:
+        await ctx.send(f'"{arg}" is not a recognised condition.')        
 @bot.command(help = "Input a name to show the description of an item.")
 async def item(ctx, *, arg):
     item = itemsDb.getItem(arg)
