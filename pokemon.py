@@ -64,6 +64,7 @@ class PokemonDatabase(Database):
           line4 = "Size Class: " + pokemon.size
           line5 = "Weight Class: " + pokemon.weight
           embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5,  inline= False)
-          embed.add_field(name="Signature Move", value = pokemon.signature_move_or_moves)
+          embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
+          embed.add_field(name="Traits", value = pokemon.traits)
 
           return (embed)
