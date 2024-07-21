@@ -228,12 +228,17 @@ async def strongestAttacks(ctx,*,args):
     description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats at level {level}."
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    noAttacks = []
     for key in highestBapMoves:
         if highestBapMoves[key] != None:
             name = key.title()
             if name in pokemon.typing:
                 name = f"{name}(STAB)"
             embed.add_field(name = name, value = highestBapMoves[key].name)
+        else:
+            noAttacks.append(key.title())
+    noAttacksStr = ", ".join(noAttacks)
+    embed.add_field(name="No Attacks", value = noAttacksStr)
     await ctx.send (embed = embed)
 
 @bot.command(help = "show the best se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the best moves of each se type that ghastly knows at level 2.")
