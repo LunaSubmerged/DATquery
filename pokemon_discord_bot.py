@@ -231,7 +231,7 @@ async def strongestAttacks(ctx,*,args):
     for key in highestBapMoves:
         if highestBapMoves[key] != None:
             name = key.title()
-            if name in pokemon.types.lower():
+            if name in pokemon.typing:
                 name = f"{name}(STAB)"
             embed.add_field(name = name, value = highestBapMoves[key].name)
     await ctx.send (embed = embed)
@@ -271,8 +271,10 @@ async def seAttacks(ctx,*,args):
     for key in highestBapMoves:
         if highestBapMoves[key] != None and localTypeChart[typesDictionary[key]] >= 2:
             name = key.title()
+            if name in pokemon1.typing:
+                name = f"{name}(STAB)"
             if localTypeChart[typesDictionary[key]] >= 4:
-                name = f"{key.title()}!!"
+                name = f"{name}(4X)"
             embed.add_field(name = name, value = highestBapMoves[key].name)
     await ctx.send (embed = embed)
 
