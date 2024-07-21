@@ -15,6 +15,8 @@ import requests
 import csv
 import natures
 import constants
+import type_calculator
+
 
 from io import StringIO
 from dotenv import load_dotenv
@@ -79,6 +81,18 @@ def effectiveBap(move, pokemon):
             _return = int(move.bap) + int(pokemon.sp_a)
     return int(_return)
 
+def effectiveBap(move, pokemon1, pokemon2):
+    _return = 0
+    if move.category != "Other" and move.bap != "??" and move.bap != "--":
+        if (move.category == "Physical"):
+            if(move.bap == "6 or 11"):
+                _return = 6 + int(pokemon1.atk) - int(pokemon2.defence)
+            else:    
+                _return = int(move.bap) +  int(pokemon1.atk) - int(pokemon2.defence)
+        else:
+            _return = int(move.bap) + int(pokemon1.sp_a) - int(pokemon2.sp_d)
+    return int(_return)
+
 def dbRefresh():
     for db in databases:
         db.refresh_db()
@@ -118,7 +132,7 @@ async def stats(ctx, *, arg):
 async def weak(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon != None:
-      await ctx.send(embed = type_calculator.typeNum(pokemon))
+      await ctx.send(embed = type_calculator.typeNumEmbed(pokemon))
     else: 
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -209,11 +223,48 @@ async def strongestAttacks(ctx,*,args):
     embed = discord.Embed(
     color = discord.Color.dark_teal(),
     title = pokemon.name,
-    description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats."
+    description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats at level {level}."
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
     for key in highestBapMoves:
         if highestBapMoves[key] != None:
+            embed.add_field(name = key.title(), value = highestBapMoves[key].name)
+    await ctx.send (embed = embed)
+
+@bot.command(help = "show the best se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the best moves of each se type that ghastly knows at level 2.")
+async def seAttacks(ctx,*,args):
+    count = args.count(",")
+    if count == 0:
+        await ctx.send ("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
+        return
+    elif count == 1:
+        pokemon1, pokemon2 = args.split(',', 1)
+        level = 4
+    else:
+        pokemon1, pokemon2, level = args.split(',', 2)
+        level = int(level)
+    pokemon1 = pokemonDb.getPokemon(pokemon1)
+    pokemon2 = pokemonDb.getPokemon(pokemon2)
+    moves = []
+    for n in range(level + 1):
+        moves = moves + pokemon1.movesList[n]
+    highestBapMoves = {}
+    for pokemonType in typesDictionary:
+        highestBapMoves[pokemonType] = None
+
+    for move in moves:
+        comparitor = highestBapMoves[move.type.lower()]
+        if(not move.category == "Other") and (not move.bap == "??") and (not "deals fixed damage" in move.description) and (comparitor == None or effectiveBap(comparitor, pokemon1, pokemon2) < effectiveBap(move,pokemon1, pokemon2)):              
+            highestBapMoves[move.type.lower()] = move
+    embed = discord.Embed(
+    color = discord.Color.dark_teal(),
+    title = f"{pokemon1.name} VS {pokemon2.name}",
+    description = f"Best SE moves, for {pokemon1.name} vs {pokemon2.name} at level {level}."
+    )
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon1.sprite_alias + ".png")
+    localTypeChart = type_calculator.getTypeChart(pokemon2)
+    for key in highestBapMoves:
+        if highestBapMoves[key] != None and localTypeChart[typesDictionary[key]] >= 2:
             embed.add_field(name = key.title(), value = highestBapMoves[key].name)
     await ctx.send (embed = embed)
 
