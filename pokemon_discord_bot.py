@@ -14,11 +14,15 @@ import logging
 import requests
 import csv
 import natures
+import constants
 
 from io import StringIO
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+from type_calculator import typesDictionary
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
@@ -32,7 +36,7 @@ naturesDb = natures.NatureDatabase()
 databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb, naturesDb]
 
 def attachMoves():
-    data = requests.get("https://docs.google.com/spreadsheets/d/1XDqCQF4miFGGaY5tGTTAgTaZ7koKiqgPAB571fYbVt4/export?format=csv&gid=0")
+    data = requests.get(constants.MOVE_POOL)
     csv_file = StringIO(data.text)
     reader = csv.reader(csv_file)
     rows = list(reader)
@@ -61,8 +65,19 @@ def attachMoves():
                 level2MoveListFinal = [movesDb.getMove(moveName) for moveName in level2MoveList]
                 level3MoveListFinal = [movesDb.getMove(moveName) for moveName in level3MoveList]
                 level4MoveListFinal = [movesDb.getMove(moveName) for moveName in level4MoveList]
-                pokemon.movesList = [level0MoveListFinal,level1MoveListFinal,level2MoveListFinal,level3MoveListFinal,level4MoveListFinal]
+                pokemon.movesList = [level0MoveListFinal,level1MoveListFinal,level2MoveListFinal,level3MoveListFinal,level4MoveListFinal]                      
 
+def effectiveBap(move, pokemon):
+    _return = 0
+    if move.category != "Other" and move.bap != "??" and move.bap != "--":
+        if (move.category == "Physical"):
+            if(move.bap == "6 or 11"):
+                _return = 6 + int(pokemon.atk)
+            else:    
+                _return = int(move.bap) +  int(pokemon.atk)
+        else:
+            _return = int(move.bap) + int(pokemon.sp_a)
+    return int(_return)
 
 def dbRefresh():
     for db in databases:
@@ -172,14 +187,35 @@ async def roll(ctx,arg):
         str_output = str_output[1:-1]
         await ctx.send(str_output)
 
-@bot.command()
-async def test(ctx,*,args):
+@bot.command(help = "show the best attacks for a pokemon. Optional level parameter, for example 'ghastly, 2' would return the best moves of each type that ghastly knows at level 2.")
+async def strongestAttacks(ctx,*,args):
     if "," in args:
-        arg1, arg2 = args.split(',', 1)
-        print("arg1 " + arg1)
-        print("arg2 " + arg2)
+        pokemon, level = args.split(',', 1)
+        level = int(level)
     else:
-        print("test command takes 2 pokemon with a comma between their names")
+        pokemon = args
+        level = 4
+    pokemon = pokemonDb.getPokemon(pokemon)
+    moves = []
+    for n in range(level + 1):
+        moves = moves + pokemon.movesList[n]
+    highestBapMoves = {}
+    for pokemonType in typesDictionary:
+        highestBapMoves[pokemonType] = None
+    for move in moves:
+        comparitor = highestBapMoves[move.type.lower()]
+        if(not move.category == "Other") and (not move.bap == "??") and (not "deals fixed damage" in move.description) and (comparitor == None or effectiveBap(comparitor, pokemon) < effectiveBap(move,pokemon)):              
+            highestBapMoves[move.type.lower()] = move
+    embed = discord.Embed(
+    color = discord.Color.dark_teal(),
+    title = pokemon.name,
+    description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats."
+    )
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    for key in highestBapMoves:
+        if highestBapMoves[key] != None:
+            embed.add_field(name = key.title(), value = highestBapMoves[key].name)
+    await ctx.send (embed = embed)
 
 # Run bot
 # Initialize bot with intents
