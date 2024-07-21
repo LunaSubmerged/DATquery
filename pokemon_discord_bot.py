@@ -28,7 +28,9 @@ from type_calculator import typesDictionary
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
-bot = commands.Bot(command_prefix='%', intents=intents, help_command=help_command)
+load_dotenv()
+command_prefix = os.environ.get("COMMAND_PREFIX")
+bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command=help_command)
 movesDb = moves.MoveDatabase()
 pokemonDb = pokemon.PokemonDatabase()
 abilitiesDb = abilities.AbilityDatabase()
@@ -265,7 +267,10 @@ async def seAttacks(ctx,*,args):
     localTypeChart = type_calculator.getTypeChart(pokemon2)
     for key in highestBapMoves:
         if highestBapMoves[key] != None and localTypeChart[typesDictionary[key]] >= 2:
-            embed.add_field(name = key.title(), value = highestBapMoves[key].name)
+            name = key.title()
+            if localTypeChart[typesDictionary[key]] >= 4:
+                name = f"{key.title()}!!"
+            embed.add_field(name = name, value = highestBapMoves[key].name)
     await ctx.send (embed = embed)
 
 # Run bot
@@ -274,7 +279,6 @@ attachMoves()
 logging.basicConfig(level=logging.INFO)
 dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
 dbRefreshThreads.start()
-load_dotenv()
 discord_token = os.environ.get("DISCORD_TOKEN")
 bot.run(discord_token)
 
