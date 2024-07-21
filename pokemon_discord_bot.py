@@ -83,7 +83,7 @@ def effectiveBap(move, pokemon):
             _return = int(move.bap) + int(pokemon.sp_a)
     return int(_return)
 
-def effectiveBap(move, pokemon1, pokemon2):
+def relativeEffectiveBap(move, pokemon1, pokemon2):
     _return = 0
     if move.category != "Other" and move.bap != "??" and move.bap != "--":
         if (move.category == "Physical"):
@@ -230,7 +230,10 @@ async def strongestAttacks(ctx,*,args):
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
     for key in highestBapMoves:
         if highestBapMoves[key] != None:
-            embed.add_field(name = key.title(), value = highestBapMoves[key].name)
+            name = key.title()
+            if name in pokemon.types.lower():
+                name = f"{name}(STAB)"
+            embed.add_field(name = name, value = highestBapMoves[key].name)
     await ctx.send (embed = embed)
 
 @bot.command(help = "show the best se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the best moves of each se type that ghastly knows at level 2.")
@@ -256,7 +259,7 @@ async def seAttacks(ctx,*,args):
 
     for move in moves:
         comparitor = highestBapMoves[move.type.lower()]
-        if(not move.category == "Other") and (not move.bap == "??") and (not "deals fixed damage" in move.description) and (comparitor == None or effectiveBap(comparitor, pokemon1, pokemon2) < effectiveBap(move,pokemon1, pokemon2)):              
+        if(not move.category == "Other") and (not move.bap == "??") and (not "deals fixed damage" in move.description) and (comparitor == None or relativeEffectiveBap(comparitor, pokemon1, pokemon2) < relativeEffectiveBap(move,pokemon1, pokemon2)):              
             highestBapMoves[move.type.lower()] = move
     embed = discord.Embed(
     color = discord.Color.dark_teal(),
