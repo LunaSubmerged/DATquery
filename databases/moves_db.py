@@ -1,5 +1,3 @@
-import requests
-import csv
 import inflection
 import discord
 import json
@@ -8,7 +6,8 @@ import constants
 
 from databases.database import Database
 from constants import BULLET
-from io import StringIO
+
+
 class Move:
     def __init__(self, **fields):
         self.__dict__.update(fields)
@@ -16,15 +15,15 @@ class Move:
     def __str__(self):
         return json.dumps(self.__dict__, indent=4)
 
+
 class MoveDatabase(Database):
     def __init__(self):
         self.bullet_space = BULLET + " "
         super().__init__(constants.MOVES)
-        
 
-    def _process_rows(self, rows):       
+    def _process_rows(self, rows):
         for count, row in enumerate(rows):
-            if(row[self.bullet_space]).startswith("-"):
+            if (row[self.bullet_space]).startswith("-"):
                 row["Name"] = row[self.bullet_space][1:]
                 row.pop(self.bullet_space)
                 row.pop("")
@@ -32,7 +31,7 @@ class MoveDatabase(Database):
                 row["effect"] = row["Effect%"]
                 row.pop("Effect%")
                 row["contact"] = row["Contact?"]
-                row["snatch"]= row["Snatch?"]
+                row["snatch"] = row["Snatch?"]
                 row["reflect"] = row["Reflect?"]
                 row.pop("Contact?")
                 row.pop("Snatch?")
@@ -43,24 +42,23 @@ class MoveDatabase(Database):
                 sanitized_row["description"] = rows[count+1]["Type"]
                 if "\n" in sanitized_row["description"]:
                     fluff, description = sanitized_row["description"].split("\n", 1)
-                    sanitized_row["fluff"]  = fluff
+                    sanitized_row["fluff"] = fluff
                     sanitized_row["description"] = description
                 else:
                     sanitized_row["fluff"] = sanitized_row["description"]
                     sanitized_row["description"] = ""
-                
+
                 move = Move(**sanitized_row)
                 self.dictionary[row["Name"].lower()] = move
 
-    
     def getMove(self, name):
         return utils.fuzzySearch(name, self.dictionary)
 
     def emptyDiscordSpace(self, int):
         return "\u1CBC" * int
-    
+
     def moveInfo(self, move):
-        if move != None:
+        if move is not None:
             embed = discord.Embed(
                 color = discord.Color.dark_teal(),
                 title = move.name,

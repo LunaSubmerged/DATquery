@@ -1,5 +1,5 @@
-from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+
 
 def fuzzySearch(value, dictionary):
     value = value.lower()

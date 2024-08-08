@@ -1,0 +1,3 @@
+[flake8]
+; max-line-length = 200  # (Optional) You can set a different max line length if preferred
+ignore = E501, E251

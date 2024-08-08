@@ -1,17 +1,16 @@
-import requests
-import csv
 import inflection
 import discord
 import utils
 import constants
 
-from io import StringIO
 from databases.database import Database
+
 
 class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
         self.movesList = None
+        
     def print_function(self, string):
         pass
 
@@ -19,7 +18,6 @@ class Pokemon:
 class PokemonDatabase(Database):
     def __init__(self):        
         super().__init__(constants.POKEMON)
-       
        
     def _build_dictionary(self, row):
         name = row["Name"]

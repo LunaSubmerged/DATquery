@@ -1,14 +1,8 @@
-import requests
-import csv
-import inflection
-from io import StringIO
 import discord
 import utils
 import constants
 
 from databases.database import Database
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 class Item:
     def __init__(self, **fields):
@@ -19,7 +13,7 @@ class Item:
 class ItemDatabase(Database):
     def __init__(self):
         super().__init__(constants.ITEMS)
-   
+
     def _build_dictionary(self, row):
         if row["Item"].startswith("-"):
             local_item = {}

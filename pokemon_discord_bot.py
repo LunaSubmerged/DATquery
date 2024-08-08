@@ -1,29 +1,14 @@
 import discord
 import type_calculator
 import os
-import databases.pokemon_db as pokemon_db
-import databases.abilities_db as abilities_db
-import conditions
-import databases.moves_db as moves_db
-import databases.items_db as items_db
 import random
-import schedule
-import time
 import threading
 import logging
-import requests
-import csv
-import databases.natures_db as natures_db
-import constants
 import type_calculator
 
-
-from io import StringIO
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 from type_calculator import typesDictionary
 from functools import partial
 
@@ -32,45 +17,6 @@ help_command = commands.DefaultHelpCommand(no_category = "Commands")
 load_dotenv()
 command_prefix = os.environ.get("COMMAND_PREFIX")
 bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command=help_command)
-movesDb = moves_db.MoveDatabase()
-pokemonDb = pokemon_db.PokemonDatabase()
-abilitiesDb = abilities_db.AbilityDatabase()
-conditionsDb = conditions.ConditionDatabase()
-itemsDb = items_db.ItemDatabase()
-naturesDb = natures_db.NatureDatabase()
-databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb, naturesDb]
-
-def attachMoves():
-    data = requests.get(constants.MOVE_POOL)
-    csv_file = StringIO(data.text)
-    reader = csv.reader(csv_file)
-    rows = list(reader)
-    start = False
-    for row in rows:
-        if row[1] == "Pokemon":
-            start = True
-            continue
-        if start:
-            pokemonRow = row
-            if pokemonRow[4].startswith("No Movepool Data for this species and forme."):
-                continue
-            
-            name = pokemonRow[1]
-            level0MoveList = pokemonRow[3].splitlines()
-            level1MoveList = pokemonRow[4].splitlines()
-            level2MoveList = pokemonRow[5].splitlines()
-            level3MoveList = pokemonRow[6].splitlines()
-            level4MoveList = pokemonRow[7].splitlines()
-            if len(level0MoveList) +  len(level1MoveList) + len(level2MoveList) + len(level3MoveList) + len(level4MoveList) <= 3:
-                continue
-            pokemon = pokemonDb.getPokemon(name)
-            if pokemon.movesList is None:
-                level0MoveListFinal = [movesDb.getMove(moveName) for moveName in level0MoveList]
-                level1MoveListFinal = [movesDb.getMove(moveName) for moveName in level1MoveList]
-                level2MoveListFinal = [movesDb.getMove(moveName) for moveName in level2MoveList]
-                level3MoveListFinal = [movesDb.getMove(moveName) for moveName in level3MoveList]
-                level4MoveListFinal = [movesDb.getMove(moveName) for moveName in level4MoveList]
-                pokemon.movesList = [level0MoveListFinal,level1MoveListFinal,level2MoveListFinal,level3MoveListFinal,level4MoveListFinal]                      
 
 def effectiveBap(move, pokemon):
     _return = 0
@@ -87,6 +33,7 @@ def effectiveBap(move, pokemon):
             _return = int(move.bap) + int(pokemon.sp_a)
     return int(_return)
 
+
 def relativeEffectiveBap(move, pokemon1, pokemon2):
     _return = 0
     if move.category != "Other" and move.bap != "??" and move.bap != "--":
@@ -100,20 +47,6 @@ def relativeEffectiveBap(move, pokemon1, pokemon2):
         else:
             _return = int(move.bap) + int(pokemon1.sp_a) - int(pokemon2.sp_d)
     return int(_return)
-
-def dbRefresh():
-    for db in databases:
-        db.refresh_db()
-    attachMoves()
-
-
-
-def dbRefreshScheduler():
-    schedule.every().day.at("00:00:00").do(dbRefresh)
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
-
 
 
 @bot.event
@@ -338,6 +271,7 @@ async def seAttacks(ctx,*,args):
 
 # Run bot
 # Initialize bot with intents
+
 attachMoves()
 logging.basicConfig(level=logging.INFO)
 dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
