@@ -10,7 +10,6 @@ from databases.conditions_db import ConditionDatabase
 from databases.natures_db import NatureDatabase
 from databases.items_db import ItemDatabase
 
-print("hello")
 
 movesDb = MoveDatabase()
 pokemonDb = PokemonDatabase()
@@ -67,3 +66,14 @@ def attachMoves():
                     level3MoveListFinal,
                     level4MoveListFinal
                 ]
+
+
+def intitialize_dbs():
+    abilitiesDb.refresh_db()
+    movesDb.refresh_db()
+    pokemonDb.refresh_db()
+    itemsDb.refresh_db()
+    conditionsDb.refresh_db()
+    naturesDb.refresh_db()
+
+    attachMoves()

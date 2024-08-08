@@ -39,7 +39,7 @@ class MoveDatabase(Database):
                 sanitized_row = {}
                 for key in row.keys():
                     sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
-                sanitized_row["description"] = rows[count+1]["Type"]
+                sanitized_row["description"] = rows[count + 1]["Type"]
                 if "\n" in sanitized_row["description"]:
                     fluff, description = sanitized_row["description"].split("\n", 1)
                     sanitized_row["fluff"] = fluff
