@@ -18,7 +18,7 @@ conditionsDb = ConditionDatabase()
 itemsDb = ItemDatabase()
 naturesDb = NatureDatabase()
 
-databases = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
+all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
 
 
 def attachMoves():

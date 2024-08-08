@@ -10,15 +10,15 @@ class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
         self.movesList = None
-        
+
     def print_function(self, string):
         pass
 
 
 class PokemonDatabase(Database):
-    def __init__(self):        
+    def __init__(self):
         super().__init__(constants.POKEMON)
-       
+
     def _build_dictionary(self, row):
         name = row["Name"]
         row.pop("")
@@ -45,42 +45,40 @@ class PokemonDatabase(Database):
             self.dictionary["primal_" + name.lower()] = pokemon
         else:
             self.dictionary[name.lower()] = pokemon
-        
 
     def getPokemon(self, name):
         return utils.fuzzySearch(name, self.dictionary)
 
-            
     def pokemonInfo(self, pokemon):
-        if pokemon != None:
-          embed = discord.Embed(
-              color = discord.Color.dark_teal(),
-              title = pokemon.name,
-              description = pokemon.typing
-          )
-          embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
-          embed.add_field(name="Abilities", value = pokemon.abilities)
-          if pokemon.hidden_ability != "":
-            embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
-          line1 = "HP: " + pokemon.hp
-          line2 = "ATK: " + pokemon.atk + " | DEF: " + pokemon.defence + " | SpA: " + pokemon.sp_a + " | SpD: " + pokemon.sp_d
-          line3 = "Speed: " + pokemon.spe
-          line4 = "Size Class: " + pokemon.size
-          line5 = "Weight Class: " + pokemon.weight
-          embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5,  inline= False)
-          if pokemon.signature_move != "":
-            embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
-          if pokemon.traits != "":
-            embed.add_field(name="Traits", value = pokemon.traits)
+        if pokemon is not None:
+            embed = discord.Embed(
+                color = discord.Color.dark_teal(),
+                title = pokemon.name,
+                description = pokemon.typing
+            )
+            embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+            embed.add_field(name="Abilities", value = pokemon.abilities)
+            if pokemon.hidden_ability != "":
+                embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
+            line1 = "HP: " + pokemon.hp
+            line2 = "ATK: " + pokemon.atk + " | DEF: " + pokemon.defence + " | SpA: " + pokemon.sp_a + " | SpD: " + pokemon.sp_d
+            line3 = "Speed: " + pokemon.spe
+            line4 = "Size Class: " + pokemon.size
+            line5 = "Weight Class: " + pokemon.weight
+            embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5, inline= False)
+            if pokemon.signature_move != "":
+                embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
+            if pokemon.traits != "":
+                embed.add_field(name="Traits", value = pokemon.traits)
 
-          return (embed)
-    
+            return (embed)
+
     def pokemonTypes(self, pokemon):
-        if pokemon != None:
-          embed = discord.Embed(
-              color = discord.Color.dark_teal(),
-              title = pokemon.name,
-              description = pokemon.typing
-          )
-          embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        if pokemon is not None:
+            embed = discord.Embed(
+                color = discord.Color.dark_teal(),
+                title = pokemon.name,
+                description = pokemon.typing
+            )
+            embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
         return (embed)

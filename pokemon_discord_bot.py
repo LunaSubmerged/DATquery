@@ -1,10 +1,11 @@
 import discord
+from db_refresher import start_db_refresher
 import type_calculator
 import os
 import random
-import threading
 import logging
 
+from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
@@ -69,7 +70,7 @@ async def ping(ctx):
 async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-      await ctx.send(embed = pokemonDb.pokemonInfo(pokemon))
+        await ctx.send(embed = pokemonDb.pokemonInfo(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -198,6 +199,7 @@ async def strongestAttacks(ctx, *, args):
     embed.add_field(name="No Attacks", value = noAttacksStr)
     await ctx.send(embed = embed)
 
+
 @bot.command(help = "show the best se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the best attacks of each se type that ghastly knows at level 2.")
 async def strongestSeAttacks(ctx, *, args):
     count = args.count(",")
@@ -240,6 +242,7 @@ async def strongestSeAttacks(ctx, *, args):
             embed.add_field(name = name, value = highestBapMoves[key].name)
     await ctx.send(embed = embed)
 
+
 @bot.command(help = "show the se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the se attacks that ghastly knows vs abra at level 2.")
 async def seAttacks(ctx, *, args):
     count = args.count(",")
@@ -264,7 +267,7 @@ async def seAttacks(ctx, *, args):
 
     for move in moves:
         moveType = move.type.lower()
-        if localTypeChart[typesDictionary[moveType]] >= 2 and move.category != "Other" and (not "deals fixed damage" in move.description):
+        if localTypeChart[typesDictionary[moveType]] >= 2 and move.category != "Other" and ("deals fixed damage" not in move.description):
             movesByType[moveType].append(move)
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
@@ -292,8 +295,6 @@ async def seAttacks(ctx, *, args):
 
 
 logging.basicConfig(level=logging.INFO)
-
-dbRefreshThreads = threading.Thread(target = dbRefreshScheduler)
-dbRefreshThreads.start()
+start_db_refresher()
 discord_token = os.environ.get("DISCORD_TOKEN")
 bot.run(discord_token)
