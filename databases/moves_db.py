@@ -6,7 +6,7 @@ import json
 import utils
 import constants
 
-from database import Database
+from databases.database import Database
 from constants import BULLET
 from io import StringIO
 class Move:

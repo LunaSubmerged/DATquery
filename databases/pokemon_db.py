@@ -6,7 +6,7 @@ import utils
 import constants
 
 from io import StringIO
-from database import Database
+from databases.database import Database
 
 class Pokemon:
     def __init__(self, **fields):

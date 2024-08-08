@@ -7,7 +7,7 @@ import constants
 from io import StringIO
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
-from database import Database
+from databases.database import Database
 
 
 data = requests.get(constants.MOVE_POOL)

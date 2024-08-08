@@ -5,7 +5,7 @@ from io import StringIO
 import discord
 import constants
 
-from database import Database
+from databases.database import Database
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 

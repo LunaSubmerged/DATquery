@@ -1,11 +1,11 @@
 import discord
 import type_calculator
 import os
-import pokemon
-import abilities
+import databases.pokemon_db as pokemon_db
+import databases.abilities_db as abilities_db
 import conditions
-import moves
-import items
+import databases.moves_db as moves_db
+import databases.items_db as items_db
 import random
 import schedule
 import time
@@ -13,7 +13,7 @@ import threading
 import logging
 import requests
 import csv
-import natures
+import databases.natures_db as natures_db
 import constants
 import type_calculator
 
@@ -32,12 +32,12 @@ help_command = commands.DefaultHelpCommand(no_category = "Commands")
 load_dotenv()
 command_prefix = os.environ.get("COMMAND_PREFIX")
 bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command=help_command)
-movesDb = moves.MoveDatabase()
-pokemonDb = pokemon.PokemonDatabase()
-abilitiesDb = abilities.AbilityDatabase()
+movesDb = moves_db.MoveDatabase()
+pokemonDb = pokemon_db.PokemonDatabase()
+abilitiesDb = abilities_db.AbilityDatabase()
 conditionsDb = conditions.ConditionDatabase()
-itemsDb = items.ItemDatabase()
-naturesDb = natures.NatureDatabase()
+itemsDb = items_db.ItemDatabase()
+naturesDb = natures_db.NatureDatabase()
 databases = [abilitiesDb, movesDb,pokemonDb,itemsDb, conditionsDb, naturesDb]
 
 def attachMoves():
