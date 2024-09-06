@@ -1,12 +1,7 @@
-import requests
-import csv
-import inflection
-from io import StringIO
 import discord
 import constants
 
 from database import Database
-from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 class Ability:
@@ -18,9 +13,9 @@ class Ability:
 class AbilityDatabase(Database):
     def __init__(self):
         super().__init__(constants.ABILITIES)
- 
+
     def _build_dictionary(self, row):
-        if row["Ability"] != "":
+        if row["Ability"].startswith("-"):
             local_ability = {}
             local_ability["name"] = row["Ability"][1:]
             fluff, description = row["Description"].split("\n", 1)
@@ -28,7 +23,7 @@ class AbilityDatabase(Database):
             local_ability["description"] = description
             ability = Ability(**local_ability)
             self.dictionary[local_ability["name"].lower()] = ability
-            
+
 
     def getAbility(self, name):
         l_name = name.lower()
