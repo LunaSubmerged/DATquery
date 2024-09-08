@@ -66,9 +66,10 @@ def attachMoves():
                     level3MoveListFinal,
                     level4MoveListFinal
                 ]
+    logging.info("inside attach moves.")
 
 
-def intitialize_dbs():
+def initialize_dbs():
     abilitiesDb.refresh_db()
     movesDb.refresh_db()
     pokemonDb.refresh_db()
