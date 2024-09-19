@@ -1,4 +1,3 @@
-import discord
 import constants
 
 from databases.database import Database
@@ -18,7 +17,7 @@ class AbilityDatabase(Database):
         super().__init__(constants.ABILITIES)
 
     def _build_dictionary(self, row):
-        if row["Ability"] != "":
+        if row["Ability"].startswith("-"):
             local_ability = {}
             local_ability["name"] = row["Ability"][1:]
             fluff, description = row["Description"].split("\n", 1)
@@ -32,13 +31,3 @@ class AbilityDatabase(Database):
         fuzzyName = fuzzy[0][0]
         if fuzzyName in self.dictionary:
             return (self.dictionary[fuzzyName])
-
-    def abilityInfo(self, ability):
-        if ability is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = ability.name,
-                description = f"*{ability.fluff}*"
-            )
-            embed.add_field(name = "Description", value = ability.description)
-            return embed

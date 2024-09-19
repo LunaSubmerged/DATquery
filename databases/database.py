@@ -8,7 +8,6 @@ class Database:
     def __init__(self, url):
         self.url = url
         self.dictionary = {}
-        self.refresh_db()
 
     def refresh_db(self):
         dat = requests.get(self.url)

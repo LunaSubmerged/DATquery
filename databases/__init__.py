@@ -69,12 +69,8 @@ def attachMoves():
     logging.info("inside attach moves.")
 
 
-def initialize_dbs():
-    abilitiesDb.refresh_db()
-    movesDb.refresh_db()
-    pokemonDb.refresh_db()
-    itemsDb.refresh_db()
-    conditionsDb.refresh_db()
-    naturesDb.refresh_db()
+def intitialize_dbs():
+    for db in all_dbs:
+        db.refresh_db()
 
     attachMoves()

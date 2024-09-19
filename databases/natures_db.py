@@ -1,7 +1,6 @@
 import requests
 import csv
 from io import StringIO
-import discord
 import constants
 
 from databases.database import Database
@@ -42,11 +41,3 @@ class NatureDatabase(Database):
         if fuzzyName in self.dictionary:
             return (self.dictionary[fuzzyName])
 
-    def natureInfo(self, nature):
-        if nature is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = nature.name,
-                description = nature.description
-            )
-            return embed

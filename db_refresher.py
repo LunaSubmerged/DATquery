@@ -1,14 +1,11 @@
 import threading
 import time
 import schedule
-from databases import all_dbs
-from databases import attachMoves
+from databases import intitialize_dbs
 
 
 def dbRefresh():
-    for db in all_dbs:
-        db.refresh_db()
-    attachMoves()
+    intitialize_dbs()
 
 
 def dbRefreshScheduler():
