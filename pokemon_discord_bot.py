@@ -129,6 +129,15 @@ async def move(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
 
+@bot.command(help= "Input a name to show the description of a move.")
+async def contest(ctx, *, arg):
+    move = movesDb.getMove(arg)
+    if move is not None:
+        await ctx.send(embed = movesDb.contestInfo(move))
+    else:
+        await ctx.sent(f'"{arg}" is not a recognised move.')
+
+
 @bot.command(help= "Input a name to show the description of a nature.")
 async def nature(ctx, *, arg):
     nature = naturesDb.getNature(arg)
