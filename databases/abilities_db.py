@@ -40,5 +40,8 @@ class AbilityDatabase(Database):
                 title = ability.name,
                 description = f"*{ability.fluff}*"
             )
-            embed.add_field(name = "Description", value = ability.description)
+            if len(ability.description) <= 1024:
+                embed.add_field(name = "Description", value = ability.description)
+            else:
+                embed.add_field(name = "Description", value="This ability is too long, go look it up in the DAT.")
             return embed
