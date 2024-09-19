@@ -74,7 +74,7 @@ def contestInfo(move):
             title = move.name,
             description = f"*{move.contest_fluff}*"
         )
-        if move.description != "":
+        if move.contest_description != "":
             embed.add_field(name="Description", value=move.contest_description, inline=False)
         embed.add_field(name="Tags", value= move.tags)
         embed.add_field(name="Genre", value= move.genre)
