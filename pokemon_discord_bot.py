@@ -172,6 +172,32 @@ async def seAttacks(ctx, *, args):
 
     await ctx.send(embed = embed)
 
+
+@bot.command(help = "show seAttacks for pokemon vs each other")
+async def matchUp(ctx, *, args):
+    count = args.count(",")
+    if count == 0:
+        await ctx.send("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
+        return
+    elif count == 1:
+        pokemon1_name, pokemon2_name = args.split(',', 1)
+        level = 4
+    else:
+        pokemon1_name, pokemon2_name, level = args.split(',', 2)
+        level = int(level)
+
+    pokemon1 = pokemonDb.getPokemon(pokemon1_name)
+    pokemon2 = pokemonDb.getPokemon(pokemon2_name)
+    sortedSeAttacksByType1 = attacks_service.calculateSeAttacks(pokemon1, pokemon2, level)
+    sortedSeAttacksByType2 = attacks_service.calculateSeAttacks(pokemon2, pokemon1, level)
+    embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
+
+    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
+
+    await ctx.send(embed = embed1)
+    await ctx.send(embed = embed2)
+
+
 # Run bot
 # Initialize bot with intents
 
