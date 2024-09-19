@@ -1,16 +1,16 @@
 import discord
-from db_refresher import start_db_refresher
 import type_calculator
 import os
 import random
 import logging
 
-from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb
+from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, intitialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
 from type_calculator import typesDictionary
 from functools import partial
+from db_refresher import start_db_refresher
 
 intents = discord.Intents.all()
 help_command = commands.DefaultHelpCommand(no_category = "Commands")
@@ -197,7 +197,7 @@ async def strongestAttacks(ctx, *, args):
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
     noAttacks = []
     for key in highestBapMoves:
-        if highestBapMoves[key] is None:
+        if highestBapMoves[key] is not None:
             name = key.title()
             if name in pokemon.typing:
                 name = f"{name}(STAB)"
@@ -304,6 +304,7 @@ async def seAttacks(ctx, *, args):
 
 
 logging.basicConfig(level=logging.INFO)
+intitialize_dbs()
 start_db_refresher()
 discord_token = os.environ.get("DISCORD_TOKEN")
 bot.run(discord_token)

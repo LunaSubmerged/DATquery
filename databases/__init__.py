@@ -69,11 +69,7 @@ def attachMoves():
 
 
 def intitialize_dbs():
-    abilitiesDb.refresh_db()
-    movesDb.refresh_db()
-    pokemonDb.refresh_db()
-    itemsDb.refresh_db()
-    conditionsDb.refresh_db()
-    naturesDb.refresh_db()
+    for db in all_dbs:
+        db.refresh_db()
 
     attachMoves()
