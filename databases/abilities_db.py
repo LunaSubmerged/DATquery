@@ -18,7 +18,7 @@ class AbilityDatabase(Database):
         super().__init__(constants.ABILITIES)
 
     def _build_dictionary(self, row):
-        if row["Ability"] != "":
+        if row["Ability"].startswith("-"):
             local_ability = {}
             local_ability["name"] = row["Ability"][1:]
             fluff, description = row["Description"].split("\n", 1)
