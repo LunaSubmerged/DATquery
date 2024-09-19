@@ -66,7 +66,7 @@ async def types(ctx, *, arg):
 async def ability(ctx, *, arg):
     ability = abilitiesDb.getAbility(arg)
     if ability is not None:
-        await ctx.send(embed = abilitiesDb.abilityInfo(ability))
+        await ctx.send(embed = embed_builder.abilityInfo(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
@@ -75,7 +75,7 @@ async def ability(ctx, *, arg):
 async def condition(ctx, *, arg):
     condition = conditionsDb.getCondition(arg)
     if condition is not None:
-        await ctx.send(embed = conditionsDb.conditionInfo(condition))
+        await ctx.send(embed = embed_builder.conditionInfo(condition))
     else:
         await ctx.send(f'"{arg}" is not a recognised condition.')
 
@@ -84,7 +84,7 @@ async def condition(ctx, *, arg):
 async def item(ctx, *, arg):
     item = itemsDb.getItem(arg)
     if item is not None:
-        await ctx.send(embed = itemsDb.itemInfo(item))
+        await ctx.send(embed = embed_builder.itemInfo(item))
     else:
         await ctx.sent(f'"{arg}" is not a recognised item.')
 
@@ -102,7 +102,7 @@ async def move(ctx, *, arg):
 async def contest(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move is not None:
-        await ctx.send(embed = movesDb.contestInfo(move))
+        await ctx.send(embed = embed_builder.contestInfo(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
@@ -111,7 +111,7 @@ async def contest(ctx, *, arg):
 async def nature(ctx, *, arg):
     nature = naturesDb.getNature(arg)
     if nature is not None:
-        await ctx.send(embed = naturesDb.natureInfo(nature))
+        await ctx.send(embed = embed_builder.natureInfo(nature))
     else:
         await ctx.sent(f'"{arg}" is not a recognised nature.')
 

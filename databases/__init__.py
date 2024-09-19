@@ -66,8 +66,6 @@ def attachMoves():
                     level3MoveListFinal,
                     level4MoveListFinal
                 ]
-    logging.info("inside attach moves.")
-
 
 def intitialize_dbs():
     for db in all_dbs:
