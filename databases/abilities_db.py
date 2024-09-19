@@ -1,4 +1,3 @@
-import discord
 import constants
 
 from databases.database import Database
@@ -32,16 +31,3 @@ class AbilityDatabase(Database):
         fuzzyName = fuzzy[0][0]
         if fuzzyName in self.dictionary:
             return (self.dictionary[fuzzyName])
-
-    def abilityInfo(self, ability):
-        if ability is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = ability.name,
-                description = f"*{ability.fluff}*"
-            )
-            if len(ability.description) <= 1024:
-                embed.add_field(name = "Description", value = ability.description)
-            else:
-                embed.add_field(name = "Description", value="This ability is too long, go look it up in the DAT.")
-            return embed

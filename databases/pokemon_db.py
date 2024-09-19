@@ -1,5 +1,4 @@
 import inflection
-import discord
 import utils
 import constants
 
@@ -48,37 +47,3 @@ class PokemonDatabase(Database):
 
     def getPokemon(self, name):
         return utils.fuzzySearch(name, self.dictionary)
-
-    def pokemonInfo(self, pokemon):
-        if pokemon is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = pokemon.name,
-                description = pokemon.typing
-            )
-            embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
-            embed.add_field(name="Abilities", value = pokemon.abilities)
-            if pokemon.hidden_ability != "":
-                embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
-            line1 = "HP: " + pokemon.hp
-            line2 = "ATK: " + pokemon.atk + " | DEF: " + pokemon.defence + " | SpA: " + pokemon.sp_a + " | SpD: " + pokemon.sp_d
-            line3 = "Speed: " + pokemon.spe
-            line4 = "Size Class: " + pokemon.size
-            line5 = "Weight Class: " + pokemon.weight
-            embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5, inline= False)
-            if pokemon.signature_move != "":
-                embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
-            if pokemon.traits != "":
-                embed.add_field(name="Traits", value = pokemon.traits)
-
-            return (embed)
-
-    def pokemonTypes(self, pokemon):
-        if pokemon is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = pokemon.name,
-                description = pokemon.typing
-            )
-            embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
-        return (embed)

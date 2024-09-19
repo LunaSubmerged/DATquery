@@ -3,13 +3,13 @@ import type_calculator
 import os
 import random
 import logging
+import embed_builder
+import attacks_service
 
 from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, intitialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
-from type_calculator import typesDictionary
-from functools import partial
 from db_refresher import start_db_refresher
 
 intents = discord.Intents.all()
@@ -17,37 +17,6 @@ help_command = commands.DefaultHelpCommand(no_category = "Commands")
 load_dotenv()
 command_prefix = os.environ.get("COMMAND_PREFIX")
 bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command=help_command)
-
-
-def effectiveBap(move, pokemon):
-    _return = 0
-    if move.category != "Other" and move.bap != "--":
-        if (move.bap == "??"):
-            _return = -10
-        elif (move.category == "Physical"):
-            if (move.bap == "6 or 11"):
-                _return = 6 + int(pokemon.atk)
-
-            else:
-                _return = int(move.bap) + int(pokemon.atk)
-        else:
-            _return = int(move.bap) + int(pokemon.sp_a)
-    return int(_return)
-
-
-def relativeEffectiveBap(move, pokemon1, pokemon2):
-    _return = 0
-    if move.category != "Other" and move.bap != "??" and move.bap != "--":
-        if (move.bap == "??"):
-            _return = -10
-        elif (move.category == "Physical"):
-            if (move.bap == "6 or 11"):
-                _return = 6 + int(pokemon1.atk) - int(pokemon2.defence)
-            else:
-                _return = int(move.bap) + int(pokemon1.atk) - int(pokemon2.defence)
-        else:
-            _return = int(move.bap) + int(pokemon1.sp_a) - int(pokemon2.sp_d)
-    return int(_return)
 
 
 @bot.event
@@ -70,7 +39,7 @@ async def ping(ctx):
 async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = pokemonDb.pokemonInfo(pokemon))
+        await ctx.send(embed = embed_builder.pokemonInfo(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -88,7 +57,7 @@ async def weak(ctx, *, arg):
 async def types(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = pokemonDb.pokemonTypes(pokemon))
+        await ctx.send(embed = embed_builder.pokemonTypes(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -115,7 +84,7 @@ async def condition(ctx, *, arg):
 async def item(ctx, *, arg):
     item = itemsDb.getItem(arg)
     if item is not None:
-        await ctx.send(embed = itemsDb.ItemInfo(item))
+        await ctx.send(embed = itemsDb.itemInfo(item))
     else:
         await ctx.sent(f'"{arg}" is not a recognised item.')
 
@@ -124,7 +93,7 @@ async def item(ctx, *, arg):
 async def move(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move is not None:
-        await ctx.send(embed = movesDb.moveInfo(move))
+        await ctx.send(embed = embed_builder.moveInfo(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
@@ -173,82 +142,14 @@ async def roll(ctx, arg):
 @bot.command(help = "show the best attacks for a pokemon. Optional level parameter, for example 'ghastly, 2' would return the best attacks of each type that ghastly knows at level 2.")
 async def strongestAttacks(ctx, *, args):
     if "," in args:
-        pokemon, level = args.split(',', 1)
+        pokemon_name, level = args.split(',', 1)
         level = int(level)
     else:
-        pokemon = args
+        pokemon_name = args
         level = 4
-    pokemon = pokemonDb.getPokemon(pokemon)
-    moves = []
-    for n in range(level + 1):
-        moves = moves + pokemon.movesList[n]
-    highestBapMoves = {}
-    for pokemonType in typesDictionary:
-        highestBapMoves[pokemonType] = None
-    for move in moves:
-        comparitor = highestBapMoves[move.type.lower()]
-        if (not move.category == "Other") and (not move.bap == "??") and ("deals fixed damage" not in move.description) and (comparitor is None or effectiveBap(comparitor, pokemon) < effectiveBap(move, pokemon)):
-            highestBapMoves[move.type.lower()] = move
-    embed = discord.Embed(
-        color = discord.Color.dark_teal(),
-        title = pokemon.name,
-        description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats at level {level}.\n attack = {pokemon.atk}, spA = {pokemon.sp_a}"
-    )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
-    noAttacks = []
-    for key in highestBapMoves:
-        if highestBapMoves[key] is not None:
-            name = key.title()
-            if name in pokemon.typing:
-                name = f"{name}(STAB)"
-            embed.add_field(name = name, value = highestBapMoves[key].name)
-        else:
-            noAttacks.append(key.title())
-    noAttacksStr = ", ".join(noAttacks)
-    embed.add_field(name="No Attacks", value = noAttacksStr)
-    await ctx.send(embed = embed)
-
-
-@bot.command(help = "show the best se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the best attacks of each se type that ghastly knows at level 2.")
-async def strongestSeAttacks(ctx, *, args):
-    count = args.count(",")
-    if count == 0:
-        await ctx.send("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
-        return
-    elif count == 1:
-        attacker, defender = args.split(',', 1)
-        level = 4
-    else:
-        attacker, defender, level = args.split(',', 2)
-        level = int(level)
-    attacker = pokemonDb.getPokemon(attacker)
-    defender = pokemonDb.getPokemon(defender)
-    moves = []
-    for n in range(level + 1):
-        moves = moves + attacker.movesList[n]
-    highestBapMoves = {}
-    for pokemonType in typesDictionary:
-        highestBapMoves[pokemonType] = None
-
-    for move in moves:
-        comparitor = highestBapMoves[move.type.lower()]
-        if (not move.category == "Other") and (not move.bap == "??") and ("deals fixed damage" not in move.description) and (comparitor is None or relativeEffectiveBap(comparitor, attacker, defender) < relativeEffectiveBap(move, attacker, defender)):
-            highestBapMoves[move.type.lower()] = move
-    embed = discord.Embed(
-        color = discord.Color.dark_teal(),
-        title = f"{attacker.name} VS {defender.name}",
-        description = f"Best SE moves, for {attacker.name} vs {defender.name} at level {level}. \n attack = {attacker.atk}, spA = {attacker.sp_a}, def = {defender.defence}, spD = {defender.sp_d}"
-    )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.sprite_alias + ".png")
-    localTypeChart = type_calculator.getTypeChart(defender)
-    for key in highestBapMoves:
-        if highestBapMoves[key] is not None and localTypeChart[typesDictionary[key]] >= 2:
-            name = key.title()
-            if name in attacker.typing:
-                name = f"{name}(STAB)"
-            if localTypeChart[typesDictionary[key]] >= 4:
-                name = f"{name}(4X)"
-            embed.add_field(name = name, value = highestBapMoves[key].name)
+    pokemon = pokemonDb.getPokemon(pokemon_name)
+    highestBapMoves = attacks_service.calculateStrongestAttacks(pokemon, level)
+    embed = embed_builder.strongestAttacksInfo(pokemon, level, highestBapMoves)
     await ctx.send(embed = embed)
 
 
@@ -266,37 +167,9 @@ async def seAttacks(ctx, *, args):
         level = int(level)
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
-    localTypeChart = type_calculator.getTypeChart(defender)
-    moves = []
-    for n in range(level + 1):
-        moves = moves + attacker.movesList[n]
-    movesByType = {}
-    for pokemonType in typesDictionary:
-        movesByType[pokemonType] = []
+    sortedSeAttacksByType = attacks_service.calculateSeAttacks(attacker, defender, level)
+    embed = embed_builder.seAttacksInfo(attacker, defender, sortedSeAttacksByType, level)
 
-    for move in moves:
-        moveType = move.type.lower()
-        if localTypeChart[typesDictionary[moveType]] >= 2 and move.category != "Other" and ("deals fixed damage" not in move.description):
-            movesByType[moveType].append(move)
-    embed = discord.Embed(
-        color = discord.Color.dark_teal(),
-        title = f"{attacker.name} VS {defender.name}",
-        description = f"SE moves, for {attacker.name} vs {defender.name} at level {level}. \n attack = {attacker.atk}, spA = {attacker.sp_a}, def = {defender.defence}, spD = {defender.sp_d}"
-    )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.sprite_alias + ".png")
-    localTypeChart = type_calculator.getTypeChart(defender)
-    for moveType in movesByType:
-        if movesByType[moveType]:
-            name = moveType.title()
-            if name in attacker.typing:
-                name = f"{name}(STAB)"
-            if localTypeChart[typesDictionary[moveType]] >= 4:
-                name = f"{name}(4X)"
-            bapSort = partial(relativeEffectiveBap, pokemon1=attacker, pokemon2=defender)
-            sortedList = movesByType[moveType]
-            sortedList.sort(key=bapSort, reverse=True)
-            sortedStr = ", ".join([move.name for move in sortedList])
-            embed.add_field(name = name, value = sortedStr)
     await ctx.send(embed = embed)
 
 # Run bot

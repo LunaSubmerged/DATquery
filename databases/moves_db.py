@@ -1,5 +1,4 @@
 import inflection
-import discord
 import json
 import utils
 import constants
@@ -65,41 +64,3 @@ class MoveDatabase(Database):
 
     def emptyDiscordSpace(self, int):
         return "\u1CBC" * int
-
-    def moveInfo(self, move):
-        if move is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = move.name,
-                description = f"*{move.fluff}*"
-            )
-            if move.description != "":
-                embed.add_field(name="Description", value=move.description, inline=False)
-            embed.add_field(name="Category", value = move.category)
-            embed.add_field(name="Type", value = move.type)
-            embed.add_field(name="Accuracy", value = move.acc)
-            embed.add_field(name="BAP", value= move.bap)
-            embed.add_field(name="Energy Cost", value=move.en_cost)
-            embed.add_field(name="Target", value= move.target)
-            embed.add_field(name="Effect Chance", value= move.effect)
-            embed.add_field(name="Priority", value= move.priority)
-            embed.add_field(name="Tags", value= move.tags)
-            embed.add_field(name="Additional Info", value = f'Contact: {move.contact} \n Reflect: {move.reflect}')
-            embed.add_field(name="\u1CBC", value = f'Snatch: {move.snatch}')
-
-        return embed
-
-    def contestInfo(self, move):
-        if move is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = move.name,
-                description = f"*{move.contest_fluff}*"
-            )
-            if move.description != "":
-                embed.add_field(name="Description", value=move.contest_description, inline=False)
-            embed.add_field(name="Tags", value= move.tags)
-            embed.add_field(name="Genre", value= move.genre)
-            embed.add_field(name="Appeal", value= move.appeal)
-            embed.add_field(name="Jam", value= move.jam)
-        return embed

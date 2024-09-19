@@ -1,4 +1,3 @@
-import discord
 import constants
 
 from databases.database import Database
@@ -33,14 +32,3 @@ class ConditionDatabase(Database):
         fuzzyName = fuzzy[0][0]
         if fuzzyName in self.dictionary:
             return (self.dictionary[fuzzyName])
-
-    def conditionInfo(self, condition):
-        if condition is not None:
-            embed = discord.Embed(
-                color = discord.Color.dark_teal(),
-                title = condition.name,
-                description = f"*{condition.fluff}*"
-            )
-            embed.add_field(name = "Description", value = condition.description, inline=False)
-            embed.add_field(name = "Default Duration", value = condition.default_duration)
-            return embed
