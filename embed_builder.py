@@ -51,7 +51,10 @@ def moveInfo(move):
             description = f"*{move.fluff}*"
         )
         if move.description != "":
-            embed.add_field(name="Description", value=move.description, inline=False)
+            if len(move.description) <= 1024:
+                embed.add_field(name="Description", value=move.description, inline=False)
+            else:
+                embed.add_field(name = "Description", value="This move is too long, go look it up in the DAT.", inline=False)
         embed.add_field(name="Category", value = move.category)
         embed.add_field(name="Type", value = move.type)
         embed.add_field(name="Accuracy", value = move.acc)
