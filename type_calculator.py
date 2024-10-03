@@ -43,48 +43,29 @@ typeChart = [
 ]
 
 
-def getTypeChart(pokemon):
-    typesList = []
-    for i in range(len(typesDictionary)):
-        typesList.append(1)
+def get_type_defense_chart(type_id: int):
+    type_defence_chart = []
+    for offensive_type in typeChart:
+        type_defence_chart.append(offensive_type[type_id])
 
-    for type in typesDictionary.keys():
-        if type in pokemon.typing.lower():
-            tempList = list(typesList)
-            typesList.clear()
-            for count, value in enumerate(typeChart):
-                typesList.append(value[typesDictionary[type]] * tempList[count])
-    return typesList
+    return type_defence_chart
 
+def get_types_defense_chart(types_list):
+    types_name_list = [pokemon_type.lower() for pokemon_type in types_list]
+    types_defence_charts = []
+    for pokemon_type in types_name_list:
+        type_id = typesDictionary[pokemon_type]
+        types_defence_charts.append(get_type_defense_chart(type_id))
 
-def typeNumEmbed(pokemon):
-    typesList = getTypeChart(pokemon)
-    embed = discord.Embed(
-        color = discord.Color.dark_teal(),
-        title = pokemon.name,
-        description = pokemon.typing
-    )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
-    weak = ""
-    resist = ""
-    immunity = ""
-    for type in typesDictionary.keys():
-        localType = typesList[typesDictionary[type]]
-        if localType == 2:
-            weak += ", " + type.capitalize()
-        elif localType >= 4:
-            weak += ", **" + type.capitalize() + "**"
-        elif localType == 0:
-            immunity += ", " + type.capitalize()
-        elif localType == 0.5:
-            resist += ", " + type.capitalize()
-        elif localType <= 0.25:
-            resist += ", **" + type.capitalize() + "**"
-    weak = weak[1:]
-    resist = resist[1:]
-    immunity = immunity[1:]
-    embed.add_field(name="Weaknesses", value = weak)
-    embed.add_field(name="Resistances", value = resist, inline= False)
-    embed.add_field(name="Immunities", value = immunity, inline= False)
+    defence_chart_final = types_defence_charts.pop(0)
+    for defence_chart in types_defence_charts:
+        defence_chart_final = list(map(lambda x, y: x * y, defence_chart_final, defence_chart))
 
-    return (embed)
+    return defence_chart_final
+
+def get_type_offence_chart(type_id: int):
+    return list(typeChart[type_id])
+
+def get_type_chart_pokemon(pokemon):
+    return get_types_defense_chart(pokemon.typing.lower().split('/'))
+

@@ -35,39 +35,40 @@ def attachMoves():
             continue
 
         if start:
-            pokemonRow = row
-            if pokemonRow[4].startswith("No Movepool Data for this species and forme."):
+            pokemon_row = row
+            if pokemon_row[4].startswith("No Movepool Data for this species and forme."):
                 continue
 
-            name = pokemonRow[1]
+            name = pokemon_row[1]
 
-            level0MoveList = pokemonRow[3].splitlines()
-            level1MoveList = pokemonRow[4].splitlines()
-            level2MoveList = pokemonRow[5].splitlines()
-            level3MoveList = pokemonRow[6].splitlines()
-            level4MoveList = pokemonRow[7].splitlines()
+            level0_move_list = pokemon_row[3].splitlines()
+            level1_move_list = pokemon_row[4].splitlines()
+            level2_move_list = pokemon_row[5].splitlines()
+            level3_move_list = pokemon_row[6].splitlines()
+            level4_move_list = pokemon_row[7].splitlines()
 
-            if len(level0MoveList) + len(level1MoveList) + len(level2MoveList) + len(level3MoveList) + len(level4MoveList) <= 3:
+            if len(level0_move_list) + len(level1_move_list) + len(level2_move_list) + len(level3_move_list) + len(level4_move_list) <= 3:
                 continue
 
             pokemon = pokemonDb.getPokemon(name)
 
             if pokemon.movesList is None:
-                level0MoveListFinal = [movesDb.getMove(moveName) for moveName in level0MoveList]
-                level1MoveListFinal = [movesDb.getMove(moveName) for moveName in level1MoveList]
-                level2MoveListFinal = [movesDb.getMove(moveName) for moveName in level2MoveList]
-                level3MoveListFinal = [movesDb.getMove(moveName) for moveName in level3MoveList]
-                level4MoveListFinal = [movesDb.getMove(moveName) for moveName in level4MoveList]
+                level0_move_list_final = [movesDb.getMove(moveName) for moveName in level0_move_list]
+                level1_move_list_final = [movesDb.getMove(moveName) for moveName in level1_move_list]
+                level2_move_list_final = [movesDb.getMove(moveName) for moveName in level2_move_list]
+                level3_move_list_final = [movesDb.getMove(moveName) for moveName in level3_move_list]
+                level4_move_list_final = [movesDb.getMove(moveName) for moveName in level4_move_list]
 
                 pokemon.movesList = [
-                    level0MoveListFinal,
-                    level1MoveListFinal,
-                    level2MoveListFinal,
-                    level3MoveListFinal,
-                    level4MoveListFinal
+                    level0_move_list_final,
+                    level1_move_list_final,
+                    level2_move_list_final,
+                    level3_move_list_final,
+                    level4_move_list_final
                 ]
 
-def intitialize_dbs():
+
+def initialize_dbs():
     for db in all_dbs:
         db.refresh_db()
 

@@ -6,7 +6,7 @@ import logging
 import embed_builder
 import attacks_service
 
-from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, intitialize_dbs
+from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
@@ -48,7 +48,7 @@ async def stats(ctx, *, arg):
 async def weak(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = type_calculator.typeNumEmbed(pokemon))
+        await ctx.send(embed = embed_builder.typeNumEmbed(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -106,6 +106,17 @@ async def contest(ctx, *, arg):
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
+@bot.command(help= "Does a pokemon know this move")
+async def learn(ctx, *, args):
+    if "," in args:
+        pokemon_name, move_name = args.split(',', 1)
+        pokemon = pokemonDb.getPokemon(pokemon_name)
+        move = movesDb.getMove(move_name)
+        embed = embed_builder.learn_move_info(pokemon, move)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.sent("That was not correctly formated. Input should be pokemon , move")
+
 
 @bot.command(help= "Input a name to show the description of a nature.")
 async def nature(ctx, *, arg):
@@ -148,7 +159,7 @@ async def strongestAttacks(ctx, *, args):
         pokemon_name = args
         level = 4
     pokemon = pokemonDb.getPokemon(pokemon_name)
-    highestBapMoves = attacks_service.calculateStrongestAttacks(pokemon, level)
+    highestBapMoves = attacks_service.calculate_strongest_attacks(pokemon, level)
     embed = embed_builder.strongestAttacksInfo(pokemon, level, highestBapMoves)
     await ctx.send(embed = embed)
 
@@ -167,7 +178,7 @@ async def seAttacks(ctx, *, args):
         level = int(level)
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
-    sortedSeAttacksByType = attacks_service.calculateSeAttacks(attacker, defender, level)
+    sortedSeAttacksByType = attacks_service.calculate_se_attacks(attacker, defender, level)
     embed = embed_builder.seAttacksInfo(attacker, defender, sortedSeAttacksByType, level)
 
     await ctx.send(embed = embed)
@@ -188,8 +199,8 @@ async def matchUp(ctx, *, args):
 
     pokemon1 = pokemonDb.getPokemon(pokemon1_name)
     pokemon2 = pokemonDb.getPokemon(pokemon2_name)
-    sortedSeAttacksByType1 = attacks_service.calculateSeAttacks(pokemon1, pokemon2, level)
-    sortedSeAttacksByType2 = attacks_service.calculateSeAttacks(pokemon2, pokemon1, level)
+    sortedSeAttacksByType1 = attacks_service.calculate_se_attacks(pokemon1, pokemon2, level)
+    sortedSeAttacksByType2 = attacks_service.calculate_se_attacks(pokemon2, pokemon1, level)
     embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
 
     embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
@@ -203,7 +214,7 @@ async def matchUp(ctx, *, args):
 
 
 logging.basicConfig(level=logging.INFO)
-intitialize_dbs()
+initialize_dbs()
 start_db_refresher()
 discord_token = os.environ.get("DISCORD_TOKEN")
 bot.run(discord_token)
