@@ -48,13 +48,21 @@ async def stats(ctx, *, arg):
 async def weak(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = embed_builder.typeNumEmbed(pokemon))
+        await ctx.send(embed = embed_builder.pokemon_weak_embed(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
+@bot.command(help = "Input a list of types.", name = "typesChart")
+async def types_chart(ctx, *, args):
+    types_list = [pokemon_type.strip() for pokemon_type in args.split(',')]
+    if types_list is not None:
+        await ctx.send(embed=embed_builder.offensive_types_chart_embed(types_list))
+        await ctx.send(embed = embed_builder.defensive_types_chart_embed(types_list))
+    else:
+        await ctx.send(f'"{args}" is not a recognised string of types.')
 
-@bot.command(help = "Input a name to show the types of a pokemon.")
-async def types(ctx, *, arg):
+@bot.command(help = "Input a name to show the types of a pokemon.", name="pokemonTypes")
+async def pokemon_types(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
         await ctx.send(embed = embed_builder.pokemonTypes(pokemon))

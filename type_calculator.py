@@ -66,6 +66,20 @@ def get_types_defense_chart(types_list):
 def get_type_offence_chart(type_id: int):
     return list(typeChart[type_id])
 
+def get_types_offense_chart(types_list):
+    types_name_list = [pokemon_type.lower() for pokemon_type in types_list]
+    types_offence_charts = []
+    for pokemon_type in types_name_list:
+        type_id = typesDictionary[pokemon_type]
+        types_offence_charts.append(get_type_offence_chart(type_id))
+
+    offence_chart_final = types_offence_charts.pop(0)
+    for offence_chart in types_offence_charts:
+        offence_chart_final = list(map(lambda x, y: max(x,y), offence_chart_final, offence_chart))
+
+    return offence_chart_final
+
+
 def get_type_chart_pokemon(pokemon):
     return get_types_defense_chart(pokemon.typing.lower().split('/'))
 
