@@ -75,7 +75,7 @@ def moveInfo(move):
 def learn_move_info(pokemon, move):
     learn_level = -1
     color = discord.Color.red()
-    for level, level_moves in enumerate(pokemon.movesList, start = 1):
+    for level, level_moves in enumerate(pokemon.movesList):
         if move in level_moves:
             learn_level = level
             color = discord.Color.dark_teal()
