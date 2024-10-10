@@ -4,7 +4,7 @@ import os
 import random
 import logging
 import embed_builder
-import attacks_service
+import moves_service
 
 from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
 from dotenv import load_dotenv
@@ -167,7 +167,7 @@ async def strongestAttacks(ctx, *, args):
         pokemon_name = args
         level = 4
     pokemon = pokemonDb.getPokemon(pokemon_name)
-    highestBapMoves = attacks_service.calculate_strongest_attacks(pokemon, level)
+    highestBapMoves = moves_service.calculate_strongest_attacks(pokemon, level)
     embed = embed_builder.strongestAttacksInfo(pokemon, level, highestBapMoves)
     await ctx.send(embed = embed)
 
@@ -186,7 +186,7 @@ async def seAttacks(ctx, *, args):
         level = int(level)
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
-    sortedSeAttacksByType = attacks_service.calculate_se_attacks(attacker, defender, level)
+    sortedSeAttacksByType = moves_service.calculate_se_attacks(attacker, defender, level)
     embed = embed_builder.seAttacksInfo(attacker, defender, sortedSeAttacksByType, level)
 
     await ctx.send(embed = embed)
@@ -207,8 +207,8 @@ async def matchUp(ctx, *, args):
 
     pokemon1 = pokemonDb.getPokemon(pokemon1_name)
     pokemon2 = pokemonDb.getPokemon(pokemon2_name)
-    sortedSeAttacksByType1 = attacks_service.calculate_se_attacks(pokemon1, pokemon2, level)
-    sortedSeAttacksByType2 = attacks_service.calculate_se_attacks(pokemon2, pokemon1, level)
+    sortedSeAttacksByType1 = moves_service.calculate_se_attacks(pokemon1, pokemon2, level)
+    sortedSeAttacksByType2 = moves_service.calculate_se_attacks(pokemon2, pokemon1, level)
     embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
 
     embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)

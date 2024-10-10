@@ -78,3 +78,20 @@ def calculate_se_attacks(attacker, defender, level):
             sorted_se_attacks_by_type[move_type] = sorted_list
 
     return sorted_se_attacks_by_type
+
+
+def count_moves_by_type(pokemon):
+    moves = []
+    for n in range(5):
+        moves = moves + pokemon.movesList[n]
+    _count_phys = 0
+    _count_spec = 0
+    _count_other = 0
+    for move in moves:
+        if move.category == "Physical":
+            _count_phys += 1
+        elif move.category == "Special":
+            _count_spec += 1
+        elif move.category == "Other":
+            _count_other += 1
+    return [_count_phys, _count_spec, _count_other]

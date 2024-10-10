@@ -1,4 +1,5 @@
 import discord
+import moves_service
 import type_calculator
 
 
@@ -22,6 +23,9 @@ def pokemonInfo(pokemon):
         line4 = "Size Class: " + pokemon.size
         line5 = "Weight Class: " + pokemon.weight
         embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5, inline= False)
+        if len(pokemon.movesList) > 0:
+            _move_types = moves_service.count_moves_by_type(pokemon)
+            embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
         if pokemon.signature_move != "":
             embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
         if pokemon.traits != "":
