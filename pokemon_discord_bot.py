@@ -114,7 +114,7 @@ async def contest(ctx, *, arg):
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
-@bot.command(help= "Does a pokemon know this move")
+@bot.command(help= "Input a pokemon and a move.")
 async def learn(ctx, *, args):
     if "," in args:
         pokemon_name, move_name = args.split(',', 1)
@@ -135,7 +135,7 @@ async def nature(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised nature.')
 
 
-@bot.command(help = "evaluate a maths expression. Use '**' for exponent instead of '^'")
+@bot.command(help = "evaluate a maths expression.")
 async def calc(ctx, *, arg):
     answer = calculate(arg)
     if answer.startswith("is not a valid expression."):
@@ -144,7 +144,7 @@ async def calc(ctx, *, arg):
         await ctx.send(f'{arg} = {answer}')
 
 
-@bot.command(help = "roll a number of dice in the format xdy, x = number of dice rolled, y = sides of the dice.")
+@bot.command(help = "roll dice. 2d6 = roll a d6 twice.")
 async def roll(ctx, arg):
     index_of_d = arg.lower().index('d')
     if index_of_d == 0:
@@ -158,7 +158,7 @@ async def roll(ctx, arg):
         await ctx.send(str_output)
 
 
-@bot.command(help = "show the best attacks for a pokemon. Optional level parameter, for example 'ghastly, 2' would return the best attacks of each type that ghastly knows at level 2.")
+@bot.command(help = "Input a pokemon and a level(optional).")
 async def strongestAttacks(ctx, *, args):
     if "," in args:
         pokemon_name, level = args.split(',', 1)
@@ -172,7 +172,7 @@ async def strongestAttacks(ctx, *, args):
     await ctx.send(embed = embed)
 
 
-@bot.command(help = "show the se attacks for a pokemon vs another pokemon. Optional level parameter, for example 'ghastly, abra, 2' would return the se attacks that ghastly knows vs abra at level 2.")
+@bot.command(help = "Input two pokemon and a level(optional).")
 async def seAttacks(ctx, *, args):
     count = args.count(",")
     if count == 0:
@@ -192,7 +192,7 @@ async def seAttacks(ctx, *, args):
     await ctx.send(embed = embed)
 
 
-@bot.command(help = "show seAttacks for pokemon vs each other")
+@bot.command(help = "Input two pokemon and a level(optional).")
 async def matchUp(ctx, *, args):
     count = args.count(",")
     if count == 0:
