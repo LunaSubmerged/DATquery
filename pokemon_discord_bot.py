@@ -24,11 +24,6 @@ async def on_ready():
     logging.info("Bot is ready.")
 
 
-@bot.listen("on_message")
-async def on_message(message):
-    if message.content == "ping":
-        await message.channel.send("pong")
-
 
 @bot.command(help = "Check if the bot is awake.", cog_name = "utility")
 async def ping(ctx):
@@ -52,7 +47,7 @@ async def weak(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
-@bot.command(help = "Input a list of types.", name = "typesChart")
+@bot.command(help = "Input a list of types.", name = "typechart")
 async def types_chart(ctx, *, args):
     types_list = [pokemon_type.strip() for pokemon_type in args.split(',')]
     if types_list is not None:
@@ -61,7 +56,7 @@ async def types_chart(ctx, *, args):
     else:
         await ctx.send(f'"{args}" is not a recognised string of types.')
 
-@bot.command(help = "Input a name to show the types of a pokemon.", name="pokemonTypes")
+@bot.command(help = "Input a name to show the types of a pokemon.", name="pokemontypes")
 async def pokemon_types(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
@@ -138,10 +133,7 @@ async def nature(ctx, *, arg):
 @bot.command(help = "evaluate a maths expression.")
 async def calc(ctx, *, arg):
     answer = calculate(arg)
-    if answer.startswith("is not a valid expression."):
-        await ctx.send(f'"{arg}" {answer}')
-    else:
-        await ctx.send(f'{arg} = {answer}')
+    await ctx.send(f'```{arg} = {answer}```')
 
 
 @bot.command(help = "roll dice. 2d6 = roll a d6 twice.")
@@ -159,7 +151,7 @@ async def roll(ctx, arg):
 
 
 @bot.command(help = "Input a pokemon and a level(optional).")
-async def strongestAttacks(ctx, *, args):
+async def strongestattacks(ctx, *, args):
     if "," in args:
         pokemon_name, level = args.split(',', 1)
         level = int(level)
@@ -173,7 +165,7 @@ async def strongestAttacks(ctx, *, args):
 
 
 @bot.command(help = "Input two pokemon and a level(optional).")
-async def seAttacks(ctx, *, args):
+async def seattacks(ctx, *, args):
     count = args.count(",")
     if count == 0:
         await ctx.send("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
@@ -193,7 +185,7 @@ async def seAttacks(ctx, *, args):
 
 
 @bot.command(help = "Input two pokemon and a level(optional).")
-async def matchUp(ctx, *, args):
+async def matchup(ctx, *, args):
     count = args.count(",")
     if count == 0:
         await ctx.send("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
