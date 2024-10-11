@@ -188,11 +188,11 @@ async def matchUp(ctx, *, args):
 
     pokemon1 = pokemonDb.getPokemon(pokemon1_name)
     pokemon2 = pokemonDb.getPokemon(pokemon2_name)
-    sortedSeAttacksByType1 = attacks_service.calculateSeAttacks(pokemon1, pokemon2, level)
-    sortedSeAttacksByType2 = attacks_service.calculateSeAttacks(pokemon2, pokemon1, level)
-    embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
+    sorted_se_attacks_by_type1 = attacks_service.calculateSeAttacks(pokemon1, pokemon2, level)
+    sorted_se_attacks_by_type2 = attacks_service.calculateSeAttacks(pokemon2, pokemon1, level)
+    embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sorted_se_attacks_by_type1, level)
 
-    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
+    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sorted_se_attacks_by_type2, level)
 
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)
