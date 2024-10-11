@@ -1,11 +1,11 @@
 import threading
 import time
 import schedule
-from databases import intitialize_dbs
+from databases import initialize_dbs
 
 
 def dbRefresh():
-    intitialize_dbs()
+    initialize_dbs()
 
 
 def dbRefreshScheduler():
