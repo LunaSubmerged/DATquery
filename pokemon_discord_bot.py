@@ -137,7 +137,7 @@ async def calc(ctx, *, arg):
 
 
 @bot.command(help = "roll dice. 2d6 = roll a d6 twice.")
-async def roll(ctx, arg):
+async def roll(ctx, arg="20d600"):
     index_of_d = arg.lower().index('d')
     if index_of_d == 0:
         await ctx.send(random.randint(1, int(arg[index_of_d + 1:])))
