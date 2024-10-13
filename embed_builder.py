@@ -70,7 +70,8 @@ def moveInfo(move):
         embed.add_field(name="Effect Chance", value= move.effect)
         embed.add_field(name="Priority", value= move.priority)
         embed.add_field(name="Tags", value= move.tags)
-        embed.add_field(name="Additional Info", value = f'Contact: {move.contact} \n Reflect: {move.reflect}')
+        embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
+        embed.add_field(name="\u1CBC", value = f'Reflect: {move.reflect}')
         embed.add_field(name="\u1CBC", value = f'Snatch: {move.snatch}')
 
 
