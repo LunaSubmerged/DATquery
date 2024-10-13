@@ -203,7 +203,7 @@ async def matchup(ctx, *, args):
     sortedSeAttacksByType2 = moves_service.calculate_se_attacks(pokemon2, pokemon1, level)
     embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
 
-    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sorted_se_attacks_by_type2, level)
+    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
 
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)
