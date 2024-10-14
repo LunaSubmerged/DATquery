@@ -31,7 +31,7 @@ class PokemonDatabase(Database):
         sanitized_row["signature_move"] = sanitized_row["signature_moveor_moves"]
         sanitized_row.pop("signature_moveor_moves")
         if sanitized_row["sprite_alias"] == "":
-            sanitized_row["sprite_alias"] = name.lower().replace(" ", "")
+            sanitized_row["sprite_alias"] = name.lower().replace(" ", "").replace("-","")
         else:
             sanitized_row["sprite_alias"] = sanitized_row["sprite_alias"].lower()
 
