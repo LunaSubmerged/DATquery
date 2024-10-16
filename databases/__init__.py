@@ -40,7 +40,8 @@ def attachMoves():
                 continue
 
             name = pokemon_row[1]
-
+            if "-Mega" in name:
+                name = f'Mega {name.replace("-Mega","")}'
             level0_move_list = pokemon_row[3].splitlines()
             level1_move_list = pokemon_row[4].splitlines()
             level2_move_list = pokemon_row[5].splitlines()
