@@ -1,3 +1,7 @@
+from operator import index
+
+from encodings.aliases import aliases
+
 import discord
 import type_calculator
 import os
@@ -136,15 +140,18 @@ async def calc(ctx, *, arg):
     await ctx.send(f'```{arg} = {answer}```')
 
 
-@bot.command(help = "roll dice. 2d6 = roll a d6 twice.")
+@bot.command(help = "roll dice. 2d6 = roll a d6 twice.", aliases = ["r"])
 async def roll(ctx, arg="20d600"):
     index_of_d = arg.lower().index('d')
+    modifier = 0
+    if '+' in arg:
+        arg, modifier = arg.split("+",1)
     if index_of_d == 0:
-        await ctx.send(random.randint(1, int(arg[index_of_d + 1:])))
+        await ctx.send(random.randint(1, int(arg[index_of_d + 1:]))+int(modifier))
     else:
         output = []
         for x in range(int(arg[:index_of_d])):
-            output.append(random.randint(1, int(arg[index_of_d + 1:])))
+            output.append(random.randint(1, int(arg[index_of_d + 1:]))+int(modifier))
         str_output = str(output)
         str_output = str_output[1:-1]
         await ctx.send(str_output)
