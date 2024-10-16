@@ -35,7 +35,7 @@ async def ping(ctx):
 
 @bot.command(help = "Link faq channel.", cog_name = "utility")
 async def faq(ctx):
-    await ctx.send('You can find our FAQ here: #faq')
+    await ctx.send('You can find our FAQ here: <#1295726153977565256>')
 
 @bot.command(help = "Input a name to show the stats of a pokemon.")
 async def stats(ctx, *, arg):
