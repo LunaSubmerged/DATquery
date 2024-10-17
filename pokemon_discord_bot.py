@@ -1,15 +1,11 @@
-from operator import index
-
-from encodings.aliases import aliases
-
 import discord
-import type_calculator
 import os
 import random
 import logging
 import embed_builder
 import moves_service
 
+from showdown import showdown_search
 from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -158,6 +154,20 @@ async def roll(ctx, arg="20d600"):
         str_output = str(output)
         str_output = str_output[1:-1]
         await ctx.send(str_output)
+
+
+@bot.command(help = "showdown search")
+async def search(ctx, *, args):
+    username = os.environ.get("SHOWDOWN_USER_NAME")
+    password = os.environ.get("SHOWDOWN_PASSWORD")
+    pokemon_name_list = showdown_search(username,password,args)
+    pokemon_name_string = ""
+    for pokemon in pokemon_name_list:
+        if len(pokemon_name_string + ", " + pokemon) > 2000:
+            break
+        pokemon_name_string = pokemon_name_string + ", " + pokemon
+
+    await ctx.send(pokemon_name_string)
 
 
 @bot.command(help = "Input a pokemon and a level(optional).")
