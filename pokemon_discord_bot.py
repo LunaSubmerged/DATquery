@@ -54,7 +54,7 @@ async def weak(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
-@bot.command(help = "Input a list of types.", name = "typechart")
+@bot.command(help = "Input a list of types.", name = "typechart", aliases = ["type"])
 async def types_chart(ctx, *, args):
     types_list = [pokemon_type.strip() for pokemon_type in args.split(',')]
     if types_list is not None:
@@ -164,7 +164,7 @@ async def roll(ctx, arg="20d600"):
         await ctx.send(str_output)
 
 
-@bot.command(help = "Input a pokemon and a level(optional).")
+@bot.command(help = "Input a pokemon and a level(optional).", aliases = ["attacks"])
 async def strongestattacks(ctx, *, args):
     if "," in args:
         pokemon_name, level = args.split(',', 1)
