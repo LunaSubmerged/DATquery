@@ -36,7 +36,6 @@ async def rules(ctx, arg):
     else:
         await ctx.send(_error)
 
-
 @bot.command(help = "Check if the bot is awake.", cog_name = "utility")
 async def ping(ctx):
     await ctx.send('pong')
@@ -44,6 +43,10 @@ async def ping(ctx):
 @bot.command(help = "Link faq channel.", cog_name = "utility")
 async def faq(ctx):
     await ctx.send('You can find our FAQ here: <#1295726153977565256>')
+
+@bot.command(help = "Helpful links")
+async def links(ctx):
+    await  ctx.send(embed = embed_builder.links())
 
 @bot.command(help = "Input a name to show the stats of a pokemon.")
 async def stats(ctx, *, arg):

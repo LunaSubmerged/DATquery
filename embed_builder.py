@@ -327,3 +327,33 @@ def offensive_types_chart_embed(types_list):
 
 
 # endregion
+
+# region UTILITY
+
+def links():
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title="Helpful Links"
+    )
+    _quick_access = "[Quick Ref](https://www.smogon.com/forums/threads/bbp-quick-link-reference.3724806/)"
+    _realgam = "[Realgam Data](https://www.smogon.com/forums/threads/realgam-tower-%E2%80%94-data-thread.3712852/#post-9437520)"
+    _safari = "[Safari Data](https://www.smogon.com/forums/threads/the-safari-zone-%E2%80%94-data-thread.3725044/)"
+    _raid = "[Raid Data](https://www.smogon.com/forums/threads/the-raid-frontier-%E2%80%94-data-thread.3725186/)"
+    _battle_tree = "[Battle Tree](https://www.smogon.com/forums/threads/the-battle-tree-challenge-signups-mk-v.3736347/)"
+    _table_of_contents = "[Table of Contents](https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/post-9355888)"
+    _substitutions = "[Substitutions](https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/#post-9368457)"
+    _action_groups = "[Action Groups](https://www.smogon.com/forums/threads/3708940/#-10-6)"
+    _main_page = "[BBP Forum](https://www.smogon.com/forums/forums/battle-by-post.164/)"
+    _DAT = "[DAT](https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/edit?gid=825844183#gid=825844183)"
+    _combo_finder = "combo finder when I find the link"
+    _first_order_guide = "[HAF Guide To First Ordering](https://www.smogon.com/forums/threads/union-street-casual-discussion-thread.3697025/page-16#post-10237123)"
+    _move_highlighting_guide = "[HAF Move Highlighting Guide](https://www.smogon.com/forums/threads/union-street-casual-discussion-thread.3697025/page-15#post-10068511)"
+    _reffing_guide = "Duo Reffing Guide"
+
+    embed.add_field(name="Rule Book", value=f"{_table_of_contents}\n{_substitutions}\n{_action_groups}")
+    embed.add_field(name = "Data", value =f"{_quick_access}\n{_realgam}\n{_safari}\n{_raid}\n{_battle_tree}")
+    embed.add_field(name="\u1CBC", value = "\u1CBC", inline= False)
+    embed.add_field(name="Tools", value=f"{_main_page}\n{_DAT}\n{_combo_finder}")
+    embed.add_field(name="Community Guides", value=f"{_first_order_guide}\n{_move_highlighting_guide}\n{_reffing_guide}")
+    return embed
+#endregion
