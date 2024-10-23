@@ -23,6 +23,14 @@ bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command
 async def on_ready():
     logging.info("Bot is ready.")
 
+@bot.command(help = "link the rule book")
+async def rules(ctx, arg):
+    _error = "input must be in the form number1.number2"
+    if "." in arg:
+        _int1, _int2 = arg.split(".")
+        await ctx.send(f"<https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/#-{_int1}-{_int2}>")
+    else:
+        await ctx.send(_error)
 
 
 @bot.command(help = "Check if the bot is awake.", cog_name = "utility")
