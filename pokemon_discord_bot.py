@@ -27,12 +27,14 @@ bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command
 async def on_ready():
     logging.info("Bot is ready.")
 
-@bot.command(help = "link the rule book")
+@bot.command(help = "link the rule book", aliases=["rule"])
 async def rules(ctx, arg):
     _error = "input must be in the form number1.number2"
     if "." in arg:
         _int1, _int2 = arg.split(".")
-        await ctx.send(f"<https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/#-{_int1}-{_int2}>")
+        _int1 = ''.join(filter(str.isdigit,_int1))
+        _int2 = ''.join(filter(str.isdigit,_int2))
+        await ctx.send(f"<https://www.smogon.com/forums/threads/.3708940/#-{_int1}-{_int2}>")
     else:
         await ctx.send(_error)
 
@@ -44,7 +46,7 @@ async def ping(ctx):
 async def faq(ctx):
     await ctx.send('You can find our FAQ here: <#1295726153977565256>')
 
-@bot.command(help = "Helpful links")
+@bot.command(help = "Helpful links", aliases = ["link"])
 async def links(ctx):
     await  ctx.send(embed = embed_builder.links())
 
