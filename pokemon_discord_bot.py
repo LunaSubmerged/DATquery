@@ -35,10 +35,10 @@ async def updated(ctx):
 async def rules(ctx, arg):
     _error = "input must be in the form number1.number2"
     if "." in arg:
-        _int1, _int2 = arg.split(".")
-        _int1 = ''.join(filter(str.isdigit,_int1))
-        _int2 = ''.join(filter(str.isdigit,_int2))
-        await ctx.send(f"<https://www.smogon.com/forums/threads/.3708940/#-{_int1}-{_int2}>")
+        int1, int2 = arg.split(".")
+        int1 = ''.join(filter(str.isdigit,int1))
+        int2 = ''.join(filter(str.isdigit,int2))
+        await ctx.send(f"<https://www.smogon.com/forums/threads/.3708940/#-{int1}-{int2}>")
     else:
         await ctx.send(_error)
 
