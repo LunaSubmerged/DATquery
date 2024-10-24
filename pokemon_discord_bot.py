@@ -46,7 +46,7 @@ async def ping(ctx):
 async def faq(ctx):
     await ctx.send('You can find our FAQ here: <#1295726153977565256>')
 
-@bot.command(help = "Helpful links", aliases = ["link"])
+@bot.command(help = "Helpful links", aliases = ["link", "l"])
 async def links(ctx):
     await  ctx.send(embed = embed_builder.links())
 
