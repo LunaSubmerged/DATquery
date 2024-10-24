@@ -18,10 +18,20 @@ load_dotenv()
 command_prefix = os.environ.get("COMMAND_PREFIX")
 bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command=help_command)
 
+class Button(discord.ui.View):
+    @discord.ui.button(label="Button", style=discord.ButtonStyle.primary)
+    async def button_callback(self, interaction, button):
+        await interaction.response.send_message("Hello World!")
+
 
 @bot.event
 async def on_ready():
     logging.info("Bot is ready.")
+
+@bot.command()
+async def test(ctx):
+    await ctx.send("Hey", view=Button())
+
 
 @bot.command(help = "link the rule book")
 async def rules(ctx, arg):
