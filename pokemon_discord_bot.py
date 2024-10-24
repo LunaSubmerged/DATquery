@@ -1,6 +1,5 @@
-from operator import index
-
-from encodings.aliases import aliases
+import sys
+from time import strftime
 
 import discord
 import type_calculator
@@ -26,6 +25,11 @@ bot = commands.Bot(command_prefix= command_prefix, intents=intents, help_command
 @bot.event
 async def on_ready():
     logging.info("Bot is ready.")
+
+
+@bot.command()
+async def updated(ctx):
+    await ctx.send(f"last updated {strftime("%H:%M:%S, %x", databases.last_refresh_time)}.")
 
 @bot.command(help = "link the rule book", aliases=["rule"])
 async def rules(ctx, arg):

@@ -1,6 +1,7 @@
 import csv
 import constants
 import requests
+from time import gmtime
 
 from io import StringIO
 from databases.moves_db import MoveDatabase
@@ -18,6 +19,7 @@ conditionsDb = ConditionDatabase()
 itemsDb = ItemDatabase()
 naturesDb = NatureDatabase()
 
+last_refresh_time = None
 all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
 
 
@@ -70,6 +72,8 @@ def attachMoves():
 
 
 def initialize_dbs():
+    global last_refresh_time
+    last_refresh_time = gmtime()
     for db in all_dbs:
         db.refresh_db()
 
