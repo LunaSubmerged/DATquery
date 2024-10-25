@@ -349,7 +349,7 @@ def links():
     _combo_finder = "[Profile Maker/Combo Finder](https://docs.google.com/spreadsheets/d/1KuqXxwczBg_1X__K4z0uG5nImm2l5Q3VM0PPVcAsjKM/edit)"
     _first_order_guide = "[HAF Guide To First Ordering](https://www.smogon.com/forums/threads/3697025/page-16#post-10237123)"
     _move_highlighting_guide = "[HAF Move Highlighting Guide](https://www.smogon.com/forums/threads/3697025/page-15#post-10068511)"
-    _reffing_guide = "Duo Reffing Guide"
+    _reffing_guide = "[Duo Reffing Guide](https://www.smogon.com/forums/threads/3697025/post-10316439)"
 
     embed.add_field(name="Rule Book", value=f"{_getting_started}\n{_comp_rules}\n{_substitutions}\n{_action_groups}")
     embed.add_field(name = "Data", value =f"{_quick_access}\n{_realgam}\n{_safari}\n{_raid}\n{_battle_tree}")
