@@ -9,6 +9,7 @@ class Pokemon:
     def __init__(self, **fields):
         self.__dict__.update(fields)
         self.movesList = None
+        self.is_fully_evolved = True
 
     def print_function(self, string):
         pass
