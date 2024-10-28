@@ -1,8 +1,6 @@
-import sys
 from time import strftime
 
 import discord
-import type_calculator
 import os
 import random
 import logging
@@ -54,7 +52,7 @@ async def faq(ctx):
 async def links(ctx):
     await  ctx.send(embed = embed_builder.links())
 
-@bot.command(help = "Input a name to show the stats of a pokemon.")
+@bot.command(help = "Input a name to show the stats of a pokemon.", aliases = ["pokemon","dex","mon"])
 async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
