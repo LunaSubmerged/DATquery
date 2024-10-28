@@ -28,7 +28,7 @@ def pokemonInfo(pokemon):
             embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
             all_moves = pokemon.getMoves()
             all_moves.sort(key= lambda x: len(x.pokemon_list))
-            embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name}({len(all_moves[0].pokemon_list)}), {all_moves[1].name}({len(all_moves[1].pokemon_list)}), {all_moves[2].name}({len(all_moves[2].pokemon_list)})')
+            embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name}({len(all_moves[0].pokemon_list)}), {all_moves[1].name}({len(all_moves[1].pokemon_list)}), {all_moves[2].name}({len(all_moves[2].pokemon_list)})', inline=False)
         if pokemon.signature_move != "":
             embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
 
