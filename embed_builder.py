@@ -28,7 +28,7 @@ def pokemonInfo(pokemon):
             embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
             all_moves = pokemon.getMoves()
             all_moves.sort(key= lambda x: len(x.pokemon_list))
-            embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name}({len(all_moves[0].pokemon_list)}), {all_moves[1].name}({len(all_moves[1].pokemon_list)}), {all_moves[2].name}({len(all_moves[2].pokemon_list)})', inline=False)
+            embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name} ({len(all_moves[0].pokemon_list)}), {all_moves[1].name} ({len(all_moves[1].pokemon_list)}), {all_moves[2].name} ({len(all_moves[2].pokemon_list)})', inline=False)
         if pokemon.signature_move != "":
             embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
 
@@ -74,8 +74,8 @@ def moveInfo(move):
         embed.add_field(name="Effect Chance", value= move.effect)
         embed.add_field(name="Priority", value= move.priority)
         embed.add_field(name="Tags", value= move.tags)
-        embed.add_field(name="FE_distribution", value = len(move.pokemon_list))
-        embed.add_field(name="level", value = move.level)
+        embed.add_field(name="FE_Distribution", value = len(move.pokemon_list))
+        embed.add_field(name="Level", value = move.level)
         embed.add_field(name="\u1CBC", value="\u1CBC")
         embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
         embed.add_field(name="\u1CBC", value = f'Reflect: {move.reflect}')
