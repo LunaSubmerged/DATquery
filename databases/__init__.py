@@ -54,11 +54,13 @@ def attachMoves():
                 continue
 
             pokemon = pokemonDb.getPokemon(name)
-            if pokemon_row[10] != "":
+            if pokemon_row[10] != "â\x80\x94":
                 unevolved_pokemon = pokemonDb.getPokemon(pokemon_row[10])
                 if not unevolved_pokemon.name in pokemon.name:
                     unevolved_pokemon.is_fully_evolved = False
-
+                    for move in unevolved_pokemon.getMoves():
+                        if unevolved_pokemon in move.pokemon_list:
+                            move.pokemon_list.remove(unevolved_pokemon)
 
             if pokemon.movesList is None:
                 level0_move_list_final = [movesDb.getMove(moveName) for moveName in level0_move_list]

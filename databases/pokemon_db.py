@@ -14,9 +14,10 @@ class Pokemon:
 
     def getMoves(self):
         moves_list = []
-        for move_level_list in self.movesList:
-            for move in move_level_list:
-                moves_list.append(move)
+        if self.movesList is not None:
+            for move_level_list in self.movesList:
+                for move in move_level_list:
+                    moves_list.append(move)
 
         return moves_list
 
