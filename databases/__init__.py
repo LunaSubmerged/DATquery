@@ -74,6 +74,16 @@ def attachMoves():
                     level3_move_list_final,
                     level4_move_list_final
                 ]
+                for level, move_leve_list in enumerate(pokemon.movesList):
+                    for move in move_leve_list:
+                        if move.level is None:
+                            move.level = level
+
+                if pokemon.is_fully_evolved:
+                    for move in pokemon.getMoves():
+                        move.pokemon_list.append(pokemon)
+
+
 
 
 def initialize_dbs():

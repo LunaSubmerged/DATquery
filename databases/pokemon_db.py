@@ -11,6 +11,15 @@ class Pokemon:
         self.movesList = None
         self.is_fully_evolved = True
 
+
+    def getMoves(self):
+        moves_list = []
+        for move_level_list in self.movesList:
+            for move in move_level_list:
+                moves_list.append(move)
+
+        return moves_list
+
     def print_function(self, string):
         pass
 
