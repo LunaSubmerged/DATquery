@@ -74,7 +74,7 @@ def moveInfo(move):
         embed.add_field(name="Effect Chance", value= move.effect)
         embed.add_field(name="Priority", value= move.priority)
         embed.add_field(name="Tags", value= move.tags)
-        embed.add_field(name="FE_Distribution", value = len(move.pokemon_list))
+        embed.add_field(name="FE Distribution", value = len(move.pokemon_list))
         embed.add_field(name="Level", value = move.level)
         embed.add_field(name="\u1CBC", value="\u1CBC")
         embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
