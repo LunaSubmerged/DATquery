@@ -1,12 +1,13 @@
 import math
-
 import discord
 import os
 import random
 import logging
+import databases
 import embed_builder
 import moves_service
 
+from time import strftime
 from pagination import PaginationView
 from showdown import showdown_search_pokemon, showdown_search_moves
 from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
@@ -35,15 +36,6 @@ async def on_ready():
 async def test(ctx):
     await ctx.send("Hey", view=Button())
 
-
-@bot.command(help = "link the rule book")
-async def rules(ctx, arg):
-    _error = "input must be in the form number1.number2"
-    if "." in arg:
-        _int1, _int2 = arg.split(".")
-        await ctx.send(f"<https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/#-{_int1}-{_int2}>")
-    else:
-        await ctx.send(_error)
 
 @bot.command()
 async def updated(ctx):
