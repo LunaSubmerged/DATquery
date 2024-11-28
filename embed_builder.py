@@ -6,7 +6,7 @@ import type_calculator
 # region POKEMON
 
 
-def pokemonInfo(pokemon):
+def pokemon_info(pokemon):
     if pokemon is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -31,10 +31,10 @@ def pokemonInfo(pokemon):
         if pokemon.traits != "":
             embed.add_field(name="Traits", value = pokemon.traits)
 
-        return (embed)
+        return embed
 
 
-def pokemonTypes(pokemon):
+def pokemon_types(pokemon):
     if pokemon is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -44,12 +44,31 @@ def pokemonTypes(pokemon):
         embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
     return (embed)
 
+def showdown_search_pokemon(pokemon_name_list):
+
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title= "Showdown Search Pokemon",
+        description="\n".join(pokemon_name_list)
+    )
+
+    return embed
+def showdown_search_moves(move_list):
+
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title= "Showdown Search Moves",
+        description="\n".join(move_list)
+    )
+
+    return embed
+
 # endregion
 
 
 # region MOVES
 
-def moveInfo(move):
+def move_info(move):
     if move is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -104,7 +123,7 @@ def learn_move_info(pokemon, move):
 
 # region ABILITIES
 
-def contestInfo(move):
+def contest_info(move):
     if move is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -124,7 +143,7 @@ def contestInfo(move):
 
 # region CONDITIONS
 
-def abilityInfo(ability):
+def ability_info(ability):
     if ability is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -142,7 +161,7 @@ def abilityInfo(ability):
 
 # region ITEMS
 
-def conditionInfo(condition):
+def condition_info(condition):
     if condition is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -158,7 +177,7 @@ def conditionInfo(condition):
 
 # region NATURES
 
-def itemInfo(item):
+def item_info(item):
     if item is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -173,7 +192,7 @@ def itemInfo(item):
 
 # region ATTACKS
 
-def natureInfo(nature):
+def nature_info(nature):
     if nature is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -183,7 +202,7 @@ def natureInfo(nature):
         return embed
 
 
-def strongestAttacksInfo(pokemon, level, highestBapMoves):
+def strongest_attacks_info(pokemon, level, highestBapMoves):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = pokemon.name,
@@ -205,7 +224,7 @@ def strongestAttacksInfo(pokemon, level, highestBapMoves):
     return embed
 
 
-def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
+def se_attacks_info(attacker, defender, sortedSeAttacksByType, level):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = f"{attacker.name} VS {defender.name}",

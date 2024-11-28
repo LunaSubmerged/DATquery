@@ -1,3 +1,5 @@
+import math
+
 import discord
 import os
 import random
@@ -5,7 +7,8 @@ import logging
 import embed_builder
 import moves_service
 
-from showdown import showdown_search
+from pagination import PaginationView
+from showdown import showdown_search_pokemon, showdown_search_moves
 from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -55,7 +58,7 @@ async def faq(ctx):
 async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = embed_builder.pokemonInfo(pokemon))
+        await ctx.send(embed = embed_builder.pokemon_info(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -81,7 +84,7 @@ async def types_chart(ctx, *, args):
 async def pokemon_types(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
-        await ctx.send(embed = embed_builder.pokemonTypes(pokemon))
+        await ctx.send(embed = embed_builder.pokemon_types(pokemon))
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
@@ -90,7 +93,7 @@ async def pokemon_types(ctx, *, arg):
 async def ability(ctx, *, arg):
     ability = abilitiesDb.getAbility(arg)
     if ability is not None:
-        await ctx.send(embed = embed_builder.abilityInfo(ability))
+        await ctx.send(embed = embed_builder.ability_info(ability))
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
@@ -99,7 +102,7 @@ async def ability(ctx, *, arg):
 async def condition(ctx, *, arg):
     condition = conditionsDb.getCondition(arg)
     if condition is not None:
-        await ctx.send(embed = embed_builder.conditionInfo(condition))
+        await ctx.send(embed = embed_builder.condition_info(condition))
     else:
         await ctx.send(f'"{arg}" is not a recognised condition.')
 
@@ -108,7 +111,7 @@ async def condition(ctx, *, arg):
 async def item(ctx, *, arg):
     item = itemsDb.getItem(arg)
     if item is not None:
-        await ctx.send(embed = embed_builder.itemInfo(item))
+        await ctx.send(embed = embed_builder.item_info(item))
     else:
         await ctx.sent(f'"{arg}" is not a recognised item.')
 
@@ -117,7 +120,7 @@ async def item(ctx, *, arg):
 async def move(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move is not None:
-        await ctx.send(embed = embed_builder.moveInfo(move))
+        await ctx.send(embed = embed_builder.move_info(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
@@ -126,7 +129,7 @@ async def move(ctx, *, arg):
 async def contest(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move is not None:
-        await ctx.send(embed = embed_builder.contestInfo(move))
+        await ctx.send(embed = embed_builder.contest_info(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
@@ -146,7 +149,7 @@ async def learn(ctx, *, args):
 async def nature(ctx, *, arg):
     nature = naturesDb.getNature(arg)
     if nature is not None:
-        await ctx.send(embed = embed_builder.natureInfo(nature))
+        await ctx.send(embed = embed_builder.nature_info(nature))
     else:
         await ctx.sent(f'"{arg}" is not a recognised nature.')
 
@@ -174,18 +177,40 @@ async def roll(ctx, arg="20d600"):
         await ctx.send(str_output)
 
 
-@bot.command(help = "showdown search")
-async def search(ctx, *, args):
-    username = os.environ.get("SHOWDOWN_USER_NAME")
-    password = os.environ.get("SHOWDOWN_PASSWORD")
-    pokemon_name_list = showdown_search(username,password,args)
-    pokemon_name_string = ""
-    for pokemon in pokemon_name_list:
-        if len(pokemon_name_string + ", " + pokemon) > 2000:
-            break
-        pokemon_name_string = pokemon_name_string + ", " + pokemon
+@bot.command(help = "showdown search pokemon")
+async def searchpokemon(ctx, *, args):
 
-    await ctx.send(pokemon_name_string)
+    pokemon_name_list = showdown_search_pokemon(args)
+    embeds = []
+    page_size = 10
+    start_point = 0
+    stop_point = start_point + page_size
+    while stop_point <= len(pokemon_name_list):
+        next_embed = embed_builder.showdown_search_pokemon(pokemon_name_list[start_point:stop_point])
+        embeds.append(next_embed)
+        start_point = stop_point
+        stop_point += page_size
+    view = PaginationView()
+    view.data = embeds
+    await view.send(ctx)
+
+@bot.command(help = "showdown search a pokemons move pool")
+async def searchmoves(ctx, *, args):
+
+    move_name_list = showdown_search_moves(args)
+    embeds = []
+    page_size = 10
+    start_point = 0
+    stop_point = start_point + page_size
+    page_total = math.ceil(len(move_name_list)/page_size)
+    for n in range(page_total):
+        next_embed = embed_builder.showdown_search_moves(move_name_list[start_point:stop_point])
+        embeds.append(next_embed)
+        start_point = stop_point
+        stop_point += page_size
+    view = PaginationView()
+    view.data = embeds
+    await view.send(ctx)
 
 
 @bot.command(help = "Input a pokemon and a level(optional).")
@@ -198,7 +223,7 @@ async def strongestattacks(ctx, *, args):
         level = 4
     pokemon = pokemonDb.getPokemon(pokemon_name)
     highestBapMoves = moves_service.calculate_strongest_attacks(pokemon, level)
-    embed = embed_builder.strongestAttacksInfo(pokemon, level, highestBapMoves)
+    embed = embed_builder.strongest_attacks_info(pokemon, level, highestBapMoves)
     await ctx.send(embed = embed)
 
 
@@ -217,7 +242,7 @@ async def seattacks(ctx, *, args):
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
     sortedSeAttacksByType = moves_service.calculate_se_attacks(attacker, defender, level)
-    embed = embed_builder.seAttacksInfo(attacker, defender, sortedSeAttacksByType, level)
+    embed = embed_builder.se_attacks_info(attacker, defender, sortedSeAttacksByType, level)
 
     await ctx.send(embed = embed)
 
@@ -239,9 +264,9 @@ async def matchup(ctx, *, args):
     pokemon2 = pokemonDb.getPokemon(pokemon2_name)
     sortedSeAttacksByType1 = moves_service.calculate_se_attacks(pokemon1, pokemon2, level)
     sortedSeAttacksByType2 = moves_service.calculate_se_attacks(pokemon2, pokemon1, level)
-    embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
+    embed1 = embed_builder.se_attacks_info(pokemon1, pokemon2, sortedSeAttacksByType1, level)
 
-    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
+    embed2 = embed_builder.se_attacks_info(pokemon2, pokemon1, sortedSeAttacksByType2, level)
 
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)
