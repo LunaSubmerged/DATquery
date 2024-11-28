@@ -26,8 +26,12 @@ def pokemon_info(pokemon):
         if pokemon.movesList is not None:
             _move_types = moves_service.count_moves_by_type(pokemon)
             embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
+            all_moves = pokemon.getMoves()
+            all_moves.sort(key= lambda x: len(x.pokemon_list))
+            embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name} ({len(all_moves[0].pokemon_list)}), {all_moves[1].name} ({len(all_moves[1].pokemon_list)}), {all_moves[2].name} ({len(all_moves[2].pokemon_list)})', inline=False)
         if pokemon.signature_move != "":
             embed.add_field(name="Signature Move", value = pokemon.signature_move, inline=False)
+
         if pokemon.traits != "":
             embed.add_field(name="Traits", value = pokemon.traits)
 
@@ -89,6 +93,9 @@ def move_info(move):
         embed.add_field(name="Effect Chance", value= move.effect)
         embed.add_field(name="Priority", value= move.priority)
         embed.add_field(name="Tags", value= move.tags)
+        embed.add_field(name="FE Distribution", value = len(move.pokemon_list))
+        embed.add_field(name="Level", value = move.level)
+        embed.add_field(name="\u1CBC", value="\u1CBC")
         embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
         embed.add_field(name="\u1CBC", value = f'Reflect: {move.reflect}')
         embed.add_field(name="\u1CBC", value = f'Snatch: {move.snatch}')
@@ -346,3 +353,35 @@ def offensive_types_chart_embed(types_list):
 
 
 # endregion
+
+# region UTILITY
+
+def links():
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title="Helpful Links"
+    )
+    _quick_access = "[Quick Ref](https://www.smogon.com/forums/threads/3724806/)"
+    _realgam = "[Realgam Data](https://www.smogon.com/forums/threads/3712852/#post-9437520)"
+    _safari = "[Safari Data](https://www.smogon.com/forums/threads/3725044/)"
+    _raid = "[Raid Data](https://www.smogon.com/forums/threads/3725186/)"
+    _battle_tree = "[Battle Tree](https://www.smogon.com/forums/threads/3736347/)"
+    _boasts = "[Boasting Hall](https://www.smogon.com/forums/threads/3728546/)"
+    _getting_started = "[Getting Started](https://www.smogon.com/forums/threads/3708940/)"
+    _comp_rules = "[Comp Rules](https://www.smogon.com/forums/threads/3708940/post-9355888)"
+    _substitutions = "[Substitutions](https://www.smogon.com/forums/threads/3708940/#post-9368457)"
+    _action_groups = "[Action Groups](https://www.smogon.com/forums/threads/3708940/#-10-6)"
+    _main_page = "[BBP Forum](https://www.smogon.com/forums/forums/164/)"
+    _DAT = "[DAT](https://docs.google.com/spreadsheets/d/1qIplFdrzRqHl91V7qRBtsb9LuC1TYW--TFoNlTDvpbA/edit?gid=825844183#gid=825844183)"
+    _combo_finder = "[Profile Maker/Combo Finder](https://docs.google.com/spreadsheets/d/1KuqXxwczBg_1X__K4z0uG5nImm2l5Q3VM0PPVcAsjKM/edit)"
+    _first_order_guide = "[HAF Guide To First Ordering](https://www.smogon.com/forums/threads/3697025/page-16#post-10237123)"
+    _move_highlighting_guide = "[HAF Move Highlighting Guide](https://www.smogon.com/forums/threads/3697025/page-15#post-10068511)"
+    _reffing_guide = "[Duo Reffing Guide](https://www.smogon.com/forums/threads/3697025/post-10316439)"
+
+    embed.add_field(name="Rule Book", value=f"{_getting_started}\n{_comp_rules}\n{_substitutions}\n{_action_groups}")
+    embed.add_field(name = "Data", value =f"{_quick_access}\n{_realgam}\n{_safari}\n{_raid}\n{_battle_tree}\n{_boasts}")
+    embed.add_field(name="\u1CBC", value = "\u1CBC", inline= False)
+    embed.add_field(name="Tools", value=f"{_main_page}\n{_DAT}\n{_combo_finder}")
+    embed.add_field(name="Community Guides", value=f"{_first_order_guide}\n{_move_highlighting_guide}\n{_reffing_guide}")
+    return embed
+#endregion

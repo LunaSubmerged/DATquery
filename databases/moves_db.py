@@ -10,6 +10,8 @@ from constants import BULLET
 class Move:
     def __init__(self, **fields):
         self.__dict__.update(fields)
+        self.pokemon_list = []
+        self.level = None
 
     def __str__(self):
         return json.dumps(self.__dict__, indent=4)

@@ -45,6 +45,20 @@ async def rules(ctx, arg):
     else:
         await ctx.send(_error)
 
+@bot.command()
+async def updated(ctx):
+    await ctx.send(f"last updated {strftime("%H:%M:%S, %x", databases.last_refresh_time)}.")
+
+@bot.command(help = "link the rule book", aliases=["rule"])
+async def rules(ctx, arg):
+    _error = "input must be in the form number1.number2"
+    if "." in arg:
+        int1, int2 = arg.split(".")
+        int1 = ''.join(filter(str.isdigit,int1))
+        int2 = ''.join(filter(str.isdigit,int2))
+        await ctx.send(f"<https://www.smogon.com/forums/threads/.3708940/#-{int1}-{int2}>")
+    else:
+        await ctx.send(_error)
 
 @bot.command(help = "Check if the bot is awake.", cog_name = "utility")
 async def ping(ctx):
@@ -54,7 +68,11 @@ async def ping(ctx):
 async def faq(ctx):
     await ctx.send('You can find our FAQ here: <#1295726153977565256>')
 
-@bot.command(help = "Input a name to show the stats of a pokemon.")
+@bot.command(help = "Helpful links", aliases = ["link", "l"])
+async def links(ctx):
+    await  ctx.send(embed = embed_builder.links())
+
+@bot.command(help = "Input a name to show the stats of a pokemon.", aliases = ["pokemon","dex","mon"])
 async def stats(ctx, *, arg):
     pokemon = pokemonDb.getPokemon(arg)
     if pokemon is not None:
@@ -71,7 +89,7 @@ async def weak(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised pokemon.')
 
-@bot.command(help = "Input a list of types.", name = "typechart")
+@bot.command(help = "Input a list of types.", name = "typechart", aliases = ["type"])
 async def types_chart(ctx, *, args):
     types_list = [pokemon_type.strip() for pokemon_type in args.split(',')]
     if types_list is not None:
@@ -166,12 +184,16 @@ async def roll(ctx, arg="20d600"):
     modifier = 0
     if '+' in arg:
         arg, modifier = arg.split("+",1)
+        modifier = int(modifier)
+    elif '-' in arg:
+        arg, modifier = arg.split("-", 1)
+        modifier = -int(modifier)
     if index_of_d == 0:
-        await ctx.send(random.randint(1, int(arg[index_of_d + 1:]))+int(modifier))
+        await ctx.send(random.randint(1, int(arg[index_of_d + 1:]))+modifier)
     else:
         output = []
         for x in range(int(arg[:index_of_d])):
-            output.append(random.randint(1, int(arg[index_of_d + 1:]))+int(modifier))
+            output.append(random.randint(1, int(arg[index_of_d + 1:]))+modifier)
         str_output = str(output)
         str_output = str_output[1:-1]
         await ctx.send(str_output)
@@ -213,7 +235,7 @@ async def searchmoves(ctx, *, args):
     await view.send(ctx)
 
 
-@bot.command(help = "Input a pokemon and a level(optional).")
+@bot.command(help = "Input a pokemon and a level(optional).", aliases = ["attacks"])
 async def strongestattacks(ctx, *, args):
     if "," in args:
         pokemon_name, level = args.split(',', 1)

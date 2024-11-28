@@ -20,9 +20,12 @@ class ConditionDatabase(Database):
         if row["Condition"].startswith("-"):
             local_condition = {}
             local_condition["name"] = row["Condition"][1:]
-            fluff, description = row["Description"].split("\n", 1)
-            local_condition["fluff"] = fluff
-            local_condition["description"] = description
+            if "\n" in row["Description"]:
+                fluff, description = row["Description"].split("\n", 1)
+                local_condition["fluff"] = fluff
+                local_condition["description"] = description
+            else:
+                local_condition["description"] = row["Description"]
             local_condition["default_duration"] = row["Default Duration"]
             condition = Condition(**local_condition)
             self.dictionary[local_condition["name"].lower()] = condition

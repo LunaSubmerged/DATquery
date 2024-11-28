@@ -1,6 +1,7 @@
 import csv
 import constants
 import requests
+from time import gmtime
 
 from io import StringIO
 from databases.moves_db import MoveDatabase
@@ -18,6 +19,7 @@ conditionsDb = ConditionDatabase()
 itemsDb = ItemDatabase()
 naturesDb = NatureDatabase()
 
+last_refresh_time = None
 all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
 
 
@@ -52,6 +54,13 @@ def attachMoves():
                 continue
 
             pokemon = pokemonDb.getPokemon(name)
+            if pokemon_row[10] != "â\x80\x94":
+                unevolved_pokemon = pokemonDb.getPokemon(pokemon_row[10])
+                if not unevolved_pokemon.name in pokemon.name:
+                    unevolved_pokemon.is_fully_evolved = False
+                    for move in unevolved_pokemon.getMoves():
+                        if unevolved_pokemon in move.pokemon_list:
+                            move.pokemon_list.remove(unevolved_pokemon)
 
             if pokemon.movesList is None:
                 level0_move_list_final = [movesDb.getMove(moveName) for moveName in level0_move_list]
@@ -67,9 +76,21 @@ def attachMoves():
                     level3_move_list_final,
                     level4_move_list_final
                 ]
+                for level, move_leve_list in enumerate(pokemon.movesList):
+                    for move in move_leve_list:
+                        if move.level is None:
+                            move.level = level
+
+                if pokemon.is_fully_evolved:
+                    for move in pokemon.getMoves():
+                        move.pokemon_list.append(pokemon)
+
+
 
 
 def initialize_dbs():
+    global last_refresh_time
+    last_refresh_time = gmtime()
     for db in all_dbs:
         db.refresh_db()
 
