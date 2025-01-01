@@ -13,7 +13,7 @@ def pokemonInfo(pokemon):
             title = pokemon.name,
             description = pokemon.typing
         )
-        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
         embed.add_field(name="Abilities", value = pokemon.abilities)
         if pokemon.hidden_ability != "":
             embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
@@ -45,7 +45,7 @@ def pokemonTypes(pokemon):
             title = pokemon.name,
             description = pokemon.typing
         )
-        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     return (embed)
 
 # endregion
@@ -98,7 +98,7 @@ def learn_move_info(pokemon, move):
         title=pokemon.name
 
     )
-    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     if learn_level == -1:
         embed.description = f"{pokemon.name} does not learn {move.name}."
     else:
@@ -197,7 +197,7 @@ def strongestAttacksInfo(pokemon, level, highestBapMoves):
         description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats at level {level}.\n attack = {pokemon.atk}, spA = {pokemon.sp_a}"
     )
 
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     noAttacks = []
     for key in highestBapMoves:
         if highestBapMoves[key] is not None:
@@ -218,7 +218,7 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
         title = f"{attacker.name} VS {defender.name}",
         description = f"SE moves, for {attacker.name} vs {defender.name} at level {level}. \n attack = {attacker.atk}, spA = {attacker.sp_a}, def = {defender.defence}, spD = {defender.sp_d}"
     )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.showdown_alias + ".png")
     localTypeChart = type_calculator.get_type_chart_pokemon(defender)
     for moveType in sortedSeAttacksByType:
         name = moveType.title()
@@ -241,7 +241,7 @@ def pokemon_weak_embed(pokemon):
         title = pokemon.name,
         description = pokemon.typing
     )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     weak = ""
     resist = ""
     immunity = ""

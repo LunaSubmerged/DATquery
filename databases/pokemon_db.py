@@ -41,10 +41,10 @@ class PokemonDatabase(Database):
         sanitized_row.pop("def")
         sanitized_row["signature_move"] = sanitized_row["signature_moveor_moves"]
         sanitized_row.pop("signature_moveor_moves")
-        if sanitized_row["sprite_alias"] == "":
-            sanitized_row["sprite_alias"] = name.lower().replace(" ", "")
+        if sanitized_row["showdown_alias"] == "":
+            sanitized_row["showdown_alias"] = name.lower().replace(" ", "")
         else:
-            sanitized_row["sprite_alias"] = sanitized_row["sprite_alias"].lower()
+            sanitized_row["showdown_alias"] = sanitized_row["showdown_alias"].lower()
 
         pokemon = Pokemon(**sanitized_row)
         if sanitized_row["id"] == "Mega":
