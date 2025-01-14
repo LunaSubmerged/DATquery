@@ -4,6 +4,7 @@ import discord
 import os
 import random
 import logging
+import databases
 import embed_builder
 import moves_service
 
@@ -141,6 +142,12 @@ async def learn(ctx, *, args):
         await ctx.send(embed=embed)
     else:
         await ctx.sent("That was not correctly formated. Input should be pokemon , move")
+
+@bot.command(help = "input a move to see who learns it.", aliases = ["canlearn"])
+async def wholearns(ctx, *, move_name):
+    move = movesDb.getMove(move_name)
+    embed = embed_builder.move_pokemon_list(move)
+    await ctx.send(embed=embed)
 
 
 @bot.command(help= "Input a name to show the description of a nature.")

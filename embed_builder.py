@@ -106,6 +106,15 @@ def learn_move_info(pokemon, move):
 
     return embed
 
+def move_pokemon_list(move):
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=move.name
+
+    )
+    pokemon_name_list = [pokemon.name for pokemon in move.pokemon_list]
+    embed.description = ', '.join(pokemon_name_list)
+    return embed
 # endregion
 
 
