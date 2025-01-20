@@ -28,15 +28,16 @@ class MoveDatabase(Database):
                 row["Name"] = row[self.bullet_space][1:]
                 row.pop(self.bullet_space)
                 row.pop("")
-                row.pop("Combo Lv.")
                 row["effect"] = row["Effect%"]
                 row.pop("Effect%")
                 row["contact"] = row["Contact?"]
                 row["snatch"] = row["Snatch?"]
                 row["reflect"] = row["Reflect?"]
+                row["combo_lvl"] = row["Combo Lv."]
                 row.pop("Contact?")
                 row.pop("Snatch?")
                 row.pop("Reflect?")
+                row.pop("Combo Lv.")
                 sanitized_row = {}
                 for key in row.keys():
                     sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]

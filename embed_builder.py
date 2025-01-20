@@ -1,3 +1,5 @@
+from itertools import filterfalse
+
 import discord
 import moves_service
 import type_calculator
@@ -76,7 +78,7 @@ def moveInfo(move):
         embed.add_field(name="Tags", value= move.tags)
         embed.add_field(name="FE Distribution", value = len(move.pokemon_list))
         embed.add_field(name="Level", value = move.level)
-        embed.add_field(name="\u1CBC", value="\u1CBC")
+        embed.add_field(name="Combo Level", value = move.combo_lvl)
         embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
         embed.add_field(name="\u1CBC", value = f'Reflect: {move.reflect}')
         embed.add_field(name="\u1CBC", value = f'Snatch: {move.snatch}')
@@ -114,6 +116,28 @@ def move_pokemon_list(move):
     )
     pokemon_name_list = [pokemon.name for pokemon in move.pokemon_list]
     embed.description = ', '.join(pokemon_name_list)
+    return embed
+
+def can_combo(pokemon, move_1, move_2):
+    learns_both = False
+    required_level = max(move_1.level, move_2.level)
+    if pokemon in move_1.pokemon_list and pokemon in move_2.pokemon_list:
+        learns_both = True
+
+    valid_combo_levels = True
+    if move_1.combo_lvl == "Banned" or move_2.combo_lvl == "Banned" or (move_1.combo_lvl == "1" and move_2.combo_lvl == "1"):
+        valid_combo_levels = False
+
+    embed = discord.Embed(
+            color=discord.Color.dark_teal(),
+            title= f'{pokemon.name} {move_1.name} + {move_2.name} Combo'
+
+    )
+    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
+    description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name}.'
+    if learns_both and valid_combo_levels:
+        description = f'{pokemon.name} learns {move_1.name}+{move_2.name} at level {required_level}.'
+    embed.description = description
     return embed
 # endregion
 

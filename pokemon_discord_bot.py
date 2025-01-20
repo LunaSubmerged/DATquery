@@ -143,11 +143,24 @@ async def learn(ctx, *, args):
     else:
         await ctx.sent("That was not correctly formated. Input should be pokemon , move")
 
-@bot.command(help = "input a move to see who learns it.", aliases = ["canlearn"])
+@bot.command(help = "Input a move to see who learns it.", aliases = ["canlearn"])
 async def wholearns(ctx, *, move_name):
     move = movesDb.getMove(move_name)
     embed = embed_builder.move_pokemon_list(move)
     await ctx.send(embed=embed)
+
+@bot.command(help = "Input a pokemon and 2 moves.", aliases = ["cancombo"])
+async def combo(ctx, *, args):
+    if args.count(",") == 2:
+        pokemon_name, move_1_name, move_2_name = args.split(',', 2)
+        pokemon = pokemonDb.getPokemon(pokemon_name)
+        move_1 = movesDb.getMove(move_1_name)
+        move_2 = movesDb.getMove(move_2_name)
+        embed = embed_builder.can_combo(pokemon, move_1, move_2)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.sent("That was not correctly formated. Input should be pokemon, move, move")
+
 
 
 @bot.command(help= "Input a name to show the description of a nature.")
