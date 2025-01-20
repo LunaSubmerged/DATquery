@@ -117,6 +117,7 @@ def move_pokemon_list(move):
 
     )
     pokemon_name_list = [pokemon.name for pokemon in move.pokemon_list]
+    pokemon_name_list.sort()
     embed.description = ', '.join(pokemon_name_list)
     return embed
 
