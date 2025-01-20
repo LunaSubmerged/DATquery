@@ -110,16 +110,20 @@ def learn_move_info(pokemon, move):
 
     return embed
 
-def move_pokemon_list(move):
+def move_pokemon_list(moves):
     embed = discord.Embed(
         color=discord.Color.dark_teal(),
-        title=move.name
+        title=f'Who Learns {", ".join(move.name for move in moves)}'
 
     )
-    pokemon_name_list = [pokemon.name for pokemon in move.pokemon_list]
+    moves_pokemon_lists = [move.pokemon_list for move in moves]
+    shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in moves_pokemon_lists])
+
+    pokemon_name_list = [pokemon.name for pokemon in shared_pokemon_list]
     pokemon_name_list.sort()
     embed.description = ', '.join(pokemon_name_list)
     return embed
+
 
 def can_combo(pokemon, move_1, move_2):
     required_level = max(move_1.level, move_2.level)
