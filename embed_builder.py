@@ -125,7 +125,7 @@ def can_combo(pokemon, move_1, move_2):
         learns_both = True
 
     valid_combo_levels = True
-    if move_1.combo_lvl == "Banned" or move_2.combo_lvl == "Banned" or (move_1.combo_lvl == "1" and move_2.combo_lvl == "1"):
+    if move_1.combo_lvl == ("Banned" or move_2.combo_lvl == "Banned") or (move_1.combo_lvl == "One" and move_2.combo_lvl == "One"):
         valid_combo_levels = False
 
     embed = discord.Embed(
