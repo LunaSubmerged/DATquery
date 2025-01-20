@@ -121,20 +121,18 @@ def move_pokemon_list(move):
     return embed
 
 def can_combo(pokemon, move_1, move_2):
-    learns_both = True
     required_level = max(move_1.level, move_2.level)
     reasons = []
-    if not pokemon in move_1.pokemon_list and pokemon in move_2.pokemon_list:
-        learns_both = False
-        reasons.append(f'{pokemon.name} does not learn both moves')
-    no_moves_banned = True
-    if move_1.combo_lvl == "Banned" or move_2.combo_lvl == "Banned":
-        no_moves_banned = False
-        reasons.append(f'a move is banned')
-    moves_not_both_one = True
+    if not pokemon in move_1.pokemon_list:
+        reasons.append(f'{pokemon.name} does not learn {move_1.name}')
+    if not pokemon in move_2.pokemon_list:
+        reasons.append(f'{pokemon.name} does not learn {move_2.name}')
+    if move_1.combo_lvl == "Banned":
+        reasons.append(f'{move_1.name} is banned')
+    if move_2.combo_lvl == "Banned":
+        reasons.append(f'{move_2.name} is banned')
     if move_1.combo_lvl == "One" and move_2.combo_lvl == "One":
-        moves_not_both_one = False
-        reasons.append(f'both moves are level one')
+        reasons.append(f'both moves are c.level one')
 
     embed = discord.Embed(
             color=discord.Color.dark_teal(),
@@ -143,8 +141,8 @@ def can_combo(pokemon, move_1, move_2):
     )
     embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     if reasons:
-        description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name} because {", ".join(reasons)}.'
-    if learns_both and no_moves_banned:
+        description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name} because: {", ".join(reasons)}.'
+    else:
         description = f'{pokemon.name} learns {move_1.name}+{move_2.name} at level {required_level}.'
     embed.description = description
     return embed
