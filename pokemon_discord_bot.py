@@ -258,7 +258,7 @@ async def matchup(ctx, *, args):
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)
 
-@bot.command(aliases = ["immunity"])
+@bot.command(aliases = ["immunity", "boss"])
 async def bossimmunity(ctx):
     await ctx.send(embed=embed_builder.conditionInfo(conditionsDb.getCondition("boss immunity")))
 # Run bot
