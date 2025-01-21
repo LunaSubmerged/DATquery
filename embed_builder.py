@@ -1,4 +1,8 @@
+from itertools import filterfalse
+
 import discord
+from numpy.array_api import empty
+
 import moves_service
 import type_calculator
 
@@ -13,7 +17,7 @@ def pokemonInfo(pokemon):
             title = pokemon.name,
             description = pokemon.typing
         )
-        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
         embed.add_field(name="Abilities", value = pokemon.abilities)
         if pokemon.hidden_ability != "":
             embed.add_field(name="Hidden Ability", value = pokemon.hidden_ability)
@@ -45,7 +49,7 @@ def pokemonTypes(pokemon):
             title = pokemon.name,
             description = pokemon.typing
         )
-        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+        embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     return (embed)
 
 # endregion
@@ -76,7 +80,7 @@ def moveInfo(move):
         embed.add_field(name="Tags", value= move.tags)
         embed.add_field(name="FE Distribution", value = len(move.pokemon_list))
         embed.add_field(name="Level", value = move.level)
-        embed.add_field(name="\u1CBC", value="\u1CBC")
+        embed.add_field(name="Combo Level", value = move.combo_lvl)
         embed.add_field(name="\u1CBC", value = f'Contact: {move.contact}')
         embed.add_field(name="\u1CBC", value = f'Reflect: {move.reflect}')
         embed.add_field(name="\u1CBC", value = f'Snatch: {move.snatch}')
@@ -98,7 +102,7 @@ def learn_move_info(pokemon, move):
         title=pokemon.name
 
     )
-    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     if learn_level == -1:
         embed.description = f"{pokemon.name} does not learn {move.name}."
     else:
@@ -106,6 +110,47 @@ def learn_move_info(pokemon, move):
 
     return embed
 
+def move_pokemon_list(moves):
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f'Who Learns {", ".join(move.name for move in moves)}'
+
+    )
+    moves_pokemon_lists = [move.pokemon_list for move in moves]
+    shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in moves_pokemon_lists])
+
+    pokemon_name_list = [pokemon.name for pokemon in shared_pokemon_list]
+    pokemon_name_list.sort()
+    embed.description = ', '.join(pokemon_name_list)
+    return embed
+
+
+def can_combo(pokemon, move_1, move_2):
+    required_level = max(move_1.level, move_2.level)
+    reasons = []
+    if not pokemon in move_1.pokemon_list:
+        reasons.append(f'{pokemon.name} does not learn {move_1.name}')
+    if not pokemon in move_2.pokemon_list:
+        reasons.append(f'{pokemon.name} does not learn {move_2.name}')
+    if move_1.combo_lvl == "Banned":
+        reasons.append(f'{move_1.name} is banned')
+    if move_2.combo_lvl == "Banned":
+        reasons.append(f'{move_2.name} is banned')
+    if move_1.combo_lvl == "One" and move_2.combo_lvl == "One":
+        reasons.append(f'both moves are c.level one')
+
+    embed = discord.Embed(
+            color=discord.Color.dark_teal(),
+            title= f'{pokemon.name} {move_1.name} + {move_2.name} Combo'
+
+    )
+    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
+    if reasons:
+        description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name} because: {", ".join(reasons)}.'
+    else:
+        description = f'{pokemon.name} learns {move_1.name}+{move_2.name} at level {required_level}.'
+    embed.description = description
+    return embed
 # endregion
 
 
@@ -197,7 +242,7 @@ def strongestAttacksInfo(pokemon, level, highestBapMoves):
         description = f"Highest BAP moves, adjusted for {pokemon.name}'s attack stats at level {level}.\n attack = {pokemon.atk}, spA = {pokemon.sp_a}"
     )
 
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     noAttacks = []
     for key in highestBapMoves:
         if highestBapMoves[key] is not None:
@@ -218,7 +263,7 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
         title = f"{attacker.name} VS {defender.name}",
         description = f"SE moves, for {attacker.name} vs {defender.name} at level {level}. \n attack = {attacker.atk}, spA = {attacker.sp_a}, def = {defender.defence}, spD = {defender.sp_d}"
     )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.showdown_alias + ".png")
     localTypeChart = type_calculator.get_type_chart_pokemon(defender)
     for moveType in sortedSeAttacksByType:
         name = moveType.title()
@@ -241,7 +286,7 @@ def pokemon_weak_embed(pokemon):
         title = pokemon.name,
         description = pokemon.typing
     )
-    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.sprite_alias + ".png")
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     weak = ""
     resist = ""
     immunity = ""
