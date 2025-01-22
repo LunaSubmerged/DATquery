@@ -47,14 +47,7 @@ class PokemonDatabase(Database):
             sanitized_row["showdown_alias"] = sanitized_row["showdown_alias"].lower()
 
         pokemon = Pokemon(**sanitized_row)
-        if sanitized_row["id"] == "Mega":
-            pokemon.name = "Mega " + pokemon.name
-            self.dictionary["mega_" + name.lower()] = pokemon
-        elif sanitized_row["id"] == "Primal":
-            pokemon.name = "Primal " + pokemon.name
-            self.dictionary["primal_" + name.lower()] = pokemon
-        else:
-            self.dictionary[name.lower()] = pokemon
+        self.dictionary[name.lower()] = pokemon
 
     def getPokemon(self, name):
         return utils.fuzzySearch(name, self.dictionary)
