@@ -54,6 +54,9 @@ def attachMoves():
                 continue
 
             pokemon = pokemonDb.getPokemon(name)
+            if name == "Cramorant-Gulping":
+                pokemon = pokemonDb.getPokemon('cramorant')
+            # Cramorant-Gulping is fuzzy searching to gulpin
             if pokemon_row[10] != "â\x80\x94":
                 unevolved_pokemon = pokemonDb.getPokemon(pokemon_row[10])
                 if not unevolved_pokemon.name in pokemon.name:
