@@ -98,7 +98,7 @@ def set_up_abilities():
             if pokemon.hidden_ability:
                 all_abilities.append(pokemon.hidden_ability)
             for ability in all_abilities:
-                if ability is not '?':
+                if ability != '?':
                     abilitiesDb.getAbility(ability).pokemon_list.append(pokemon)
 
 

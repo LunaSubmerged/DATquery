@@ -30,17 +30,24 @@ class PokemonDatabase(Database):
         super().__init__(constants.POKEMON)
 
     def _build_dictionary(self, row):
-        name = row["Name"]
-        row.pop("")
-        row.pop("Reference Functions")
-        row.pop("Bot Notation Column")
+        name = ""
+        if "Name" in row:
+            name = row["Name"]
+        if "" in row:
+            row.pop("")
+        if "Reference Functions" in row:
+            row.pop("Reference Functions")
+        if "Bot Notation Column" in row:
+            row.pop("Bot Notation Column")
         sanitized_row = {}
         for key in row.keys():
             sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
-        sanitized_row["defence"] = row["Def"]
-        sanitized_row.pop("def")
-        sanitized_row["signature_move"] = sanitized_row["signature_moveor_moves"]
-        sanitized_row.pop("signature_moveor_moves")
+        if "Def" in row:
+            sanitized_row["defence"] = row["Def"]
+            sanitized_row.pop("def")
+        if "signature_moveor_moves" in sanitized_row:
+            sanitized_row["signature_move"] = sanitized_row["signature_moveor_moves"]
+            sanitized_row.pop("signature_moveor_moves")
 
         aliases = {
             'basculin-blue-striped': 'basculin-bluestriped',
@@ -85,12 +92,13 @@ class PokemonDatabase(Database):
             'wo-chien': 'wochien',
             'zygarde-10%': 'zygarde-10'
         }
-        if name.lower() in aliases:
-            sanitized_row["showdown_alias"] = aliases[name.lower()]
-        elif sanitized_row["showdown_alias"] == "":
-            sanitized_row["showdown_alias"] = name.lower().replace(" ", "")
-        else:
-            sanitized_row["showdown_alias"] = sanitized_row["showdown_alias"].lower()
+        if "showdown_alias" in sanitized_row:
+            if name.lower() in aliases:
+                sanitized_row["showdown_alias"] = aliases[name.lower()]
+            elif sanitized_row["showdown_alias"] == "":
+                sanitized_row["showdown_alias"] = name.lower().replace(" ", "")
+            else:
+                sanitized_row["showdown_alias"] = sanitized_row["showdown_alias"].lower()
 
         pokemon = Pokemon(**sanitized_row)
         self.dictionary[name.lower()] = pokemon
