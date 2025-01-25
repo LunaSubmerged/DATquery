@@ -96,6 +96,13 @@ async def ability(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
+@bot.command(help = "input a list of abilities.", aliaes = ["hasabilities", "whohas"])
+async def hasability(ctx, *, input_ability_names):
+    ability_names = input_ability_names.split(',')
+    abilities = [abilitiesDb.getAbility(ability_name) for ability_name in ability_names]
+    embed = embed_builder.ability_pokemon_list(abilities)
+    await ctx.send(embed=embed)
+
 
 @bot.command(help = "Input a name to show the description of a condition.", aliases = ["status"])
 async def condition(ctx, *, arg):

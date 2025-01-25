@@ -88,6 +88,18 @@ def attachMoves():
                     for move in pokemon.getMoves():
                         move.pokemon_list.append(pokemon)
 
+def set_up_abilities():
+    for pokemon_name in pokemonDb.dictionary:
+        pokemon = pokemonDb.dictionary[pokemon_name]
+        if pokemon.is_fully_evolved:
+            all_abilities = []
+            if pokemon.abilities:
+                all_abilities.extend(pokemon.abilities.split(','))
+            if pokemon.hidden_ability:
+                all_abilities.append(pokemon.hidden_ability)
+            for ability in all_abilities:
+                if ability is not '?':
+                    abilitiesDb.getAbility(ability).pokemon_list.append(pokemon)
 
 
 
@@ -98,3 +110,4 @@ def initialize_dbs():
         db.refresh_db()
 
     attachMoves()
+    set_up_abilities()

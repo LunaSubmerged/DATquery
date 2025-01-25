@@ -151,10 +151,6 @@ def can_combo(pokemon, move_1, move_2):
         description = f'{pokemon.name} learns {move_1.name}+{move_2.name} at level {required_level}.'
     embed.description = description
     return embed
-# endregion
-
-
-# region ABILITIES
 
 def contestInfo(move):
     if move is not None:
@@ -170,12 +166,10 @@ def contestInfo(move):
         embed.add_field(name="Appeal", value= move.appeal)
         embed.add_field(name="Jam", value= move.jam)
     return embed
-
 # endregion
 
 
-# region CONDITIONS
-
+# region ABILITIES
 def abilityInfo(ability):
     if ability is not None:
         embed = discord.Embed(
@@ -187,12 +181,26 @@ def abilityInfo(ability):
             embed.add_field(name = "Description", value = ability.description)
         else:
             embed.add_field(name = "Description", value="This ability is too long, go look it up in the DAT.")
+        embed.add_field(name="FE Distribution", value=len(ability.pokemon_list), inline=False)
         return embed
 
+def ability_pokemon_list(abilities):
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f'Who has {", ".join(ability.name for ability in abilities)}'
+
+    )
+    ability_pokemon_lists = [ability.pokemon_list for ability in abilities]
+    shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in ability_pokemon_lists])
+
+    pokemon_name_list = [pokemon.name for pokemon in shared_pokemon_list]
+    pokemon_name_list.sort()
+    embed.description = ', '.join(pokemon_name_list)
+    return embed
 # endregion
 
 
-# region ITEMS
+# region CONDITIONS
 
 def conditionInfo(condition):
     if condition is not None:
@@ -208,7 +216,7 @@ def conditionInfo(condition):
 # endregion
 
 
-# region NATURES
+# region ITEMS
 
 def itemInfo(item):
     if item is not None:
@@ -223,7 +231,7 @@ def itemInfo(item):
 # endregion
 
 
-# region ATTACKS
+# region NATURES
 
 def natureInfo(nature):
     if nature is not None:
@@ -234,6 +242,10 @@ def natureInfo(nature):
         )
         return embed
 
+# endregion
+
+
+# region ATTACKS
 
 def strongestAttacksInfo(pokemon, level, highestBapMoves):
     embed = discord.Embed(

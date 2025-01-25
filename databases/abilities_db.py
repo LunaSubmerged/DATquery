@@ -7,6 +7,7 @@ from fuzzywuzzy import process
 class Ability:
     def __init__(self, **fields):
         self.__dict__.update(fields)
+        self.pokemon_list = []
 
     def print_function(self, string):
         pass
