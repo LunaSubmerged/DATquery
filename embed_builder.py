@@ -128,9 +128,9 @@ def move_pokemon_list(moves):
 def can_combo(pokemon, move_1, move_2):
     required_level = max(move_1.level, move_2.level)
     reasons = []
-    if not pokemon in move_1.pokemon_list:
+    if not move_1 in pokemon.getMoves():
         reasons.append(f'{pokemon.name} does not learn {move_1.name}')
-    if not pokemon in move_2.pokemon_list:
+    if not move_2 in pokemon.getMoves():
         reasons.append(f'{pokemon.name} does not learn {move_2.name}')
     if move_1.combo_lvl == "Banned":
         reasons.append(f'{move_1.name} is banned')
