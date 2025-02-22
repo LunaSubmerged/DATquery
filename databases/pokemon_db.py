@@ -39,6 +39,8 @@ class PokemonDatabase(Database):
             row.pop("Reference Functions")
         if "Bot Notation Column" in row:
             row.pop("Bot Notation Column")
+        if name == "POKEMON":
+            return
         sanitized_row = {}
         for key in row.keys():
             sanitized_row[inflection.underscore(key.replace(" ", ""))] = row[key]
