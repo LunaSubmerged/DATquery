@@ -64,6 +64,7 @@ class PokemonDatabase(Database):
             'gourgeist-super': 'gourgeist',
             'greninja-bond': 'greninja',
             'hakamo-o': 'hakamoo',
+            'ho-oh': 'hooh',
             'indeedee-m': 'indeedee',
             'kommo-o': 'kommoo',
             'meowstic-m': 'meowstic',
