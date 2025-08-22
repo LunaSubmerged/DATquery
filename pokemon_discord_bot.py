@@ -33,7 +33,9 @@ async def updated(ctx):
 @bot.command(help = "link the rule book", aliases=["rule"])
 async def rules(ctx, arg):
     _error = "input must be in the form number1.number2"
-    if "." in arg:
+    if arg == "":
+        await ctx.send("https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/post-9355888")
+    elif "." in arg:
         int1, int2 = arg.split(".")
         int1 = ''.join(filter(str.isdigit,int1))
         int2 = ''.join(filter(str.isdigit,int2))

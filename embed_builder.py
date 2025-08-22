@@ -377,11 +377,15 @@ def links():
         color=discord.Color.dark_teal(),
         title="Helpful Links"
     )
+    embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + "rotom" + ".png")
     _quick_access = "[Quick Ref](https://www.smogon.com/forums/threads/3724806/)"
-    _realgam = "[Realgam Data](https://www.smogon.com/forums/threads/3712852/#post-9437520)"
-    _safari = "[Safari Data](https://www.smogon.com/forums/threads/3725044/)"
-    _raid = "[Raid Data](https://www.smogon.com/forums/threads/3725186/)"
+    _realgam = "[Realgam](https://www.smogon.com/forums/threads/3712853/)"
+    _subway = "[Subway](https://www.smogon.com/forums/threads/3763303/)"
+    _safari = "[Safari](https://www.smogon.com/forums/threads/3725044/)"
+    _raid = "[Raid](https://www.smogon.com/forums/threads/3725186/)"
+    _guild = "[Guild](https://www.smogon.com/forums/threads/3758090/)"
     _battle_tree = "[Battle Tree](https://www.smogon.com/forums/threads/3736347/)"
+    _pike = "[Pike](https://www.smogon.com/forums/threads/3748229/)"
     _boasts = "[Boasting Hall](https://www.smogon.com/forums/threads/3728546/)"
     _getting_started = "[Getting Started](https://www.smogon.com/forums/threads/3708940/)"
     _comp_rules = "[Comp Rules](https://www.smogon.com/forums/threads/3708940/post-9355888)"
@@ -395,7 +399,7 @@ def links():
     _reffing_guide = "[Duo Reffing Guide](https://www.smogon.com/forums/threads/3697025/post-10316439)"
 
     embed.add_field(name="Rule Book", value=f"{_getting_started}\n{_comp_rules}\n{_substitutions}\n{_action_groups}")
-    embed.add_field(name = "Data", value =f"{_quick_access}\n{_realgam}\n{_safari}\n{_raid}\n{_battle_tree}\n{_boasts}")
+    embed.add_field(name = "Data", value =f"{_quick_access}\n{_realgam}\n{_subway}\n{_safari}\n{_raid}\n{_guild}\n{_battle_tree}\n{_pike}\n{_boasts}")
     embed.add_field(name="\u1CBC", value = "\u1CBC", inline= False)
     embed.add_field(name="Tools", value=f"{_main_page}\n{_DAT}\n{_combo_finder}")
     embed.add_field(name="Community Guides", value=f"{_first_order_guide}\n{_move_highlighting_guide}\n{_reffing_guide}")
