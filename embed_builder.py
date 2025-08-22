@@ -139,8 +139,11 @@ def can_combo(pokemon, move_1, move_2):
     if move_1.combo_lvl == "One" and move_2.combo_lvl == "One":
         reasons.append(f'both moves are c.level one.')
 
+    _color = discord.Color.dark_teal()
+    if reasons:
+        _color = discord.Color.red()
     embed = discord.Embed(
-            color=discord.Color.red(),
+            color=_color,
             title= f'{pokemon.name} {move_1.name} + {move_2.name} Combo'
 
     )

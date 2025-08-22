@@ -31,9 +31,9 @@ async def updated(ctx):
     await ctx.send(f"last updated {strftime("%H:%M:%S, %x", databases.last_refresh_time)}.")
 
 @bot.command(help = "link the rule book", aliases=["rule"])
-async def rules(ctx, arg):
+async def rules(ctx, arg = "index"):
     _error = "input must be in the form number1.number2"
-    if arg == "":
+    if arg == "index":
         await ctx.send("https://www.smogon.com/forums/threads/battle-by-post-player-handbook-generation-9.3708940/post-9355888")
     elif "." in arg:
         int1, int2 = arg.split(".")
