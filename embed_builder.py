@@ -129,24 +129,24 @@ def can_combo(pokemon, move_1, move_2):
     required_level = max(move_1.level, move_2.level)
     reasons = []
     if not move_1 in pokemon.getMoves():
-        reasons.append(f'{pokemon.name} does not learn {move_1.name}')
+        reasons.append(f'{pokemon.name} does not learn {move_1.name}.')
     if not move_2 in pokemon.getMoves():
-        reasons.append(f'{pokemon.name} does not learn {move_2.name}')
+        reasons.append(f'{pokemon.name} does not learn {move_2.name}.')
     if move_1.combo_lvl == "Banned":
-        reasons.append(f'{move_1.name} is banned')
+        reasons.append(f'{move_1.name} is banned.')
     if move_2.combo_lvl == "Banned":
-        reasons.append(f'{move_2.name} is banned')
+        reasons.append(f'{move_2.name} is banned.')
     if move_1.combo_lvl == "One" and move_2.combo_lvl == "One":
-        reasons.append(f'both moves are c.level one')
+        reasons.append(f'both moves are c.level one.')
 
     embed = discord.Embed(
-            color=discord.Color.dark_teal(),
+            color=discord.Color.red(),
             title= f'{pokemon.name} {move_1.name} + {move_2.name} Combo'
 
     )
     embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     if reasons:
-        description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name} because: {", ".join(reasons)}.'
+        description = f'{move_1.name} + {move_2.name} is not a legal combo for {pokemon.name} because:\n - {"\n - ".join(reasons)}'
     else:
         description = f'{pokemon.name} learns {move_1.name}+{move_2.name} at level {required_level}.'
     embed.description = description
@@ -163,8 +163,10 @@ def contestInfo(move):
             embed.add_field(name="Description", value=move.contest_description, inline=False)
         embed.add_field(name="Tags", value= move.tags)
         embed.add_field(name="Genre", value= move.genre)
+        embed.add_field(name="\u1CBC", value="")
         embed.add_field(name="Appeal", value= move.appeal)
         embed.add_field(name="Jam", value= move.jam)
+        embed.add_field(name="\u1CBC", value="")
     return embed
 # endregion
 
@@ -291,35 +293,45 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
 # endregion
 
 # region TYPES
+def type_intensity_dict (types_chart):
+    weak = ""
+    resist = ""
+    immunity = ""
+    for type in type_calculator.typesDictionary.keys():
+        local_type = types_chart[type_calculator.typesDictionary[type]]
+        if local_type == 2:
+            weak += ", " + type.capitalize()
+        elif local_type > 2:
+            weak += f", **{type.capitalize()} (X{local_type })**"
+        elif local_type == 0:
+            immunity += ", " + type.capitalize()
+        elif local_type == 0.5:
+            resist += ", " + type.capitalize()
+        elif local_type <= 0.25:
+            resist += f", **{type.capitalize()} (X{local_type })**"
+    weak = weak[1:]
+    resist = resist[1:]
+    immunity = immunity[1:]
+    local_type_chart_dict = {
+        "weak" : weak,
+        "resist" : resist,
+        "immunity" : immunity
+    }
+    return local_type_chart_dict
+
+
 def pokemon_weak_embed(pokemon):
-    typesList = type_calculator.get_type_chart_pokemon(pokemon)
+    types_list = type_calculator.get_type_chart_pokemon(pokemon)
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = pokemon.name,
         description = pokemon.typing
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
-    weak = ""
-    resist = ""
-    immunity = ""
-    for type in type_calculator.typesDictionary.keys():
-        localType = typesList[type_calculator.typesDictionary[type]]
-        if localType == 2:
-            weak += ", " + type.capitalize()
-        elif localType >= 4:
-            weak += ", **" + type.capitalize() + "**"
-        elif localType == 0:
-            immunity += ", " + type.capitalize()
-        elif localType == 0.5:
-            resist += ", " + type.capitalize()
-        elif localType <= 0.25:
-            resist += ", **" + type.capitalize() + "**"
-    weak = weak[1:]
-    resist = resist[1:]
-    immunity = immunity[1:]
-    embed.add_field(name="Weaknesses", value = weak)
-    embed.add_field(name="Resistances", value = resist, inline= False)
-    embed.add_field(name="Immunities", value = immunity, inline= False)
+    _type_intensity_dict = type_intensity_dict(types_list)
+    embed.add_field(name="Weaknesses", value = _type_intensity_dict["weak"])
+    embed.add_field(name="Resistances", value = _type_intensity_dict["resist"], inline= False)
+    embed.add_field(name="Immunities", value = _type_intensity_dict["immunity"], inline= False)
 
     return embed
 
@@ -332,27 +344,10 @@ def defensive_types_chart_embed(types_list):
         description = "/".join([pokemon_type.capitalize() for pokemon_type in types_list])
     )
     embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/bastiodon.png")
-    weak = ""
-    resist = ""
-    immunity = ""
-    for pokemon_type in type_calculator.typesDictionary.keys():
-        local_type = types_defence_chart[type_calculator.typesDictionary[pokemon_type]]
-        if local_type == 2:
-            weak += ", " + pokemon_type.capitalize()
-        elif local_type >= 4:
-            weak += ", **" + pokemon_type.capitalize() + "**"
-        elif local_type == 0:
-            immunity += ", " + pokemon_type.capitalize()
-        elif local_type == 0.5:
-            resist += ", " + pokemon_type.capitalize()
-        elif local_type <= 0.25:
-            resist += ", **" + pokemon_type.capitalize() + "**"
-    weak = weak[1:]
-    resist = resist[1:]
-    immunity = immunity[1:]
-    embed.add_field(name="Weaknesses", value = weak)
-    embed.add_field(name="Resistances", value = resist, inline= False)
-    embed.add_field(name="Immunities", value = immunity, inline= False)
+    _type_intensity_dict = type_intensity_dict(types_defence_chart)
+    embed.add_field(name="Weaknesses", value=_type_intensity_dict["weak"])
+    embed.add_field(name="Resistances", value=_type_intensity_dict["resist"], inline=False)
+    embed.add_field(name="Immunities", value=_type_intensity_dict["immunity"], inline=False)
 
     return embed
 
@@ -365,27 +360,10 @@ def offensive_types_chart_embed(types_list):
         description = "/".join([pokemon_type.capitalize() for pokemon_type in types_list])
     )
     embed.set_thumbnail(url="https://play.pokemonshowdown.com/sprites/bw/rampardos.png")
-    weak = ""
-    resist = ""
-    immunity = ""
-    for pokemon_type in type_calculator.typesDictionary.keys():
-        local_type = types_offence_chart[type_calculator.typesDictionary[pokemon_type]]
-        if local_type == 2:
-            weak += ", " + pokemon_type.capitalize()
-        elif local_type >= 4:
-            weak += ", **" + pokemon_type.capitalize() + "**"
-        elif local_type == 0:
-            immunity += ", " + pokemon_type.capitalize()
-        elif local_type == 0.5:
-            resist += ", " + pokemon_type.capitalize()
-        elif local_type <= 0.25:
-            resist += ", **" + pokemon_type.capitalize() + "**"
-    weak = weak[1:]
-    resist = resist[1:]
-    immunity = immunity[1:]
-    embed.add_field(name="Super Effective", value = weak)
-    embed.add_field(name="Resisted", value = resist, inline= False)
-    embed.add_field(name="Immuned", value = immunity, inline= False)
+    _type_intensity_dict = type_intensity_dict(types_offence_chart)
+    embed.add_field(name="Weaknesses", value=_type_intensity_dict["weak"])
+    embed.add_field(name="Resistances", value=_type_intensity_dict["resist"], inline=False)
+    embed.add_field(name="Immunities", value=_type_intensity_dict["immunity"], inline=False)
 
     return embed
 
