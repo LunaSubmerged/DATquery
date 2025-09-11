@@ -25,11 +25,25 @@ all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
 
 
 def attachMoves():
-    data = requests.get(constants.MOVE_POOL)
-    csv_file = StringIO(data.text)
-    reader = csv.reader(csv_file)
-    rows = list(reader)
-    logging.info("Number of rows in move pool sheet is %d.", len(rows))
+    retries = 0
+    success = False
+
+    rows = []
+    while retries < 10 and not success:
+        data = requests.get(constants.MOVE_POOL)
+        csv_file = StringIO(data.text)
+
+        reader = csv.reader(csv_file)
+        rows = list(reader)
+        logging.info("Number of rows in move pool sheet is %d.", len(rows))
+
+        if len(rows) > 800:
+            success = True
+        else:
+            logging.error(f"Retrieving move spreadsheet has failed {retries} times.")
+
+        retries += 1
+
     logging.info("First few rows are:")
     for num, row in enumerate(rows):
         if num < 7:
