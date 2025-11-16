@@ -273,10 +273,10 @@ async def priority(ctx, *, args):
     if pokemon is not None:
         priority_moves = filter(lambda move: int(move.priority) > 0 ,pokemon.getMoves())
         priority_moves = filter(lambda move: int(move.level) <= level, priority_moves)
-        embed = embed_builder.priorityAttacksInfo(pokemon, priority_moves, level)
+        embed = embed_builder.priorityMovesInfo(pokemon, priority_moves, level)
         await ctx.send(embed=embed)
     else:
-        await ctx.send(f'"{arg}" is not a recognised pokemon.')
+        await ctx.send(f'"{args}" is not a recognised pokemon.')
 
 
 @bot.command(help = "Input two pokemon and a level(optional).")
