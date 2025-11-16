@@ -80,7 +80,21 @@ def calculate_se_attacks(attacker, defender, level):
     return sorted_se_attacks_by_type
 
 
-def count_moves_by_type(pokemon):
+
+def calculate_typed_attacks(pokemon, pokemon_type, level):
+    moves = []
+    for n in range(level + 1):
+        type_moves = [_move for _move in pokemon.movesList[n] if _move.type == pokemon_type]
+        moves = moves + type_moves
+    temp_moves = list(moves)
+    for move in temp_moves:
+        if move.category == "Other":
+            moves.remove(move)
+    moves.sort(key=lambda _move: _move.bap)
+    return moves
+
+
+def count_moves_by_category(pokemon):
     moves = []
     for n in range(5):
         moves = moves + pokemon.movesList[n]

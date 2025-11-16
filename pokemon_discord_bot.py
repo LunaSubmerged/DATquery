@@ -26,7 +26,7 @@ async def on_ready():
     logging.info("Bot is ready.")
 
 
-@bot.command()
+@bot.command(help = "Return when the bot was last updated.")
 async def updated(ctx):
     await ctx.send(f"last updated {strftime("%H:%M:%S, %x", databases.last_refresh_time)}.")
 
@@ -98,7 +98,7 @@ async def ability(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
-@bot.command(help = "input a list of abilities.", aliaes = ["hasabilities", "whohas"])
+@bot.command(help = "Input a list of abilities.", aliaes = ["hasabilities", "whohas"])
 async def hasability(ctx, *, input_ability_names):
     ability_names = input_ability_names.split(',')
     abilities = [abilitiesDb.getAbility(ability_name) for ability_name in ability_names]
@@ -182,13 +182,13 @@ async def nature(ctx, *, arg):
         await ctx.sent(f'"{arg}" is not a recognised nature.')
 
 
-@bot.command(help = "evaluate a maths expression.")
+@bot.command(help = "Evaluate a maths expression.")
 async def calc(ctx, *, arg):
     answer = calculate(arg)
     await ctx.send(f'```{arg} = {answer}```')
 
 
-@bot.command(help = "roll dice. 2d6 = roll a d6 twice.", aliases = ["r"])
+@bot.command(help = "Roll dice. 2d6 = roll a d6 twice.", aliases = ["r"])
 async def roll(ctx, arg="20d600"):
     index_of_d = arg.lower().index('d')
     modifier = 0
@@ -227,7 +227,7 @@ async def strongestattacks(ctx, *, args):
 async def seattacks(ctx, *, args):
     count = args.count(",")
     if count == 0:
-        await ctx.send("seAttacks takes 2 comma seperated pokemon names, and an optional comma seperated level")
+        await ctx.send("seattacks takes 2 comma separated pokemon names, and an optional comma separated level")
         return
     elif count == 1:
         attacker, defender = args.split(',', 1)
@@ -237,11 +237,28 @@ async def seattacks(ctx, *, args):
         level = int(level)
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
-    sortedSeAttacksByType = moves_service.calculate_se_attacks(attacker, defender, level)
-    embed = embed_builder.seAttacksInfo(attacker, defender, sortedSeAttacksByType, level)
+    sorted_se_attacks_by_type = moves_service.calculate_se_attacks(attacker, defender, level)
+    embed = embed_builder.seAttacksInfo(attacker, defender, sorted_se_attacks_by_type, level)
 
     await ctx.send(embed = embed)
 
+@bot.command(help = "Input a pokemon, a type and a level(optional).")
+async def typeattacks(ctx, *, args):
+    count = args.count(",")
+    if count == 0:
+        await ctx.send("typeattacks takes a comma separated pokemon name and a type, with an optional comma separated level")
+        return
+    elif count == 1:
+        pokemon, pokemon_type = args.split(',', 1)
+        level = 4
+    else:
+        pokemon, pokemon_type, level = args.split(',', 2)
+        level = int(level)
+    pokemon = pokemonDb.getPokemon(pokemon)
+    type_name = pokemon_type.strip().capitalize()
+    sorted_type_attacks = moves_service.calculate_typed_attacks(pokemon, type_name, level)
+    embed = embed_builder.typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level)
+    await ctx.send(embed=embed)
 
 @bot.command(help = "Input two pokemon and a level(optional).")
 async def matchup(ctx, *, args):
@@ -267,7 +284,7 @@ async def matchup(ctx, *, args):
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)
 
-@bot.command(aliases = ["immunity", "boss"])
+@bot.command(help = "Return boss immunities", aliases = ["immunity", "boss"])
 async def bossimmunity(ctx):
     await ctx.send(embed=embed_builder.conditionInfo(conditionsDb.getCondition("boss immunity")))
 # Run bot

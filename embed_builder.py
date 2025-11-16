@@ -28,7 +28,7 @@ def pokemonInfo(pokemon):
         line5 = "Weight Class: " + pokemon.weight
         embed.add_field(name="Stats", value = line1 + "\n" + line2 + "\n" + line3 + "\n" + line4 + "\n" + line5, inline= False)
         if pokemon.movesList is not None:
-            _move_types = moves_service.count_moves_by_type(pokemon)
+            _move_types = moves_service.count_moves_by_category(pokemon)
             embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
             all_moves = pokemon.getMoves()
             all_moves.sort(key= lambda x: len(x.pokemon_list))
@@ -111,13 +111,14 @@ def learn_move_info(pokemon, move):
     return embed
 
 def move_pokemon_list(moves):
-    embed = discord.Embed(
-        color=discord.Color.dark_teal(),
-        title=f'Who Learns {", ".join(move.name for move in moves)}'
-
-    )
     moves_pokemon_lists = [move.pokemon_list for move in moves]
     shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in moves_pokemon_lists])
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f'Who Learns {", ".join(move.name for move in moves)} ({len(shared_pokemon_list)} Total)'
+
+    )
+
 
     pokemon_name_list = [pokemon.name for pokemon in shared_pokemon_list]
     pokemon_name_list.sort()
@@ -190,13 +191,14 @@ def abilityInfo(ability):
         return embed
 
 def ability_pokemon_list(abilities):
-    embed = discord.Embed(
-        color=discord.Color.dark_teal(),
-        title=f'Who has {", ".join(ability.name for ability in abilities)}'
-
-    )
     ability_pokemon_lists = [ability.pokemon_list for ability in abilities]
     shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in ability_pokemon_lists])
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f'Who has {", ".join(ability.name for ability in abilities)} ({len(shared_pokemon_list)} Total)'
+
+    )
+
 
     pokemon_name_list = [pokemon.name for pokemon in shared_pokemon_list]
     pokemon_name_list.sort()
@@ -291,6 +293,17 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
             name = f"{name}(4X)"
         sortedStr = ", ".join([move.name for move in sortedSeAttacksByType[moveType]])
         embed.add_field(name = name, value = sortedStr)
+
+    return embed
+
+def typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level):
+    embed = discord.Embed(
+        color = discord.Color.dark_teal(),
+        title = f"{pokemon.name} {type_name} Attacks.",
+    )
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
+    body = ", ".join(move.name for move in sorted_type_attacks)
+    embed.add_field(name = type_name, value = body)
 
     return embed
 # endregion
