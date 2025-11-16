@@ -2,6 +2,20 @@ from type_calculator import typesDictionary
 from type_calculator import get_type_chart_pokemon
 from functools import partial
 
+def bap(move):
+    _return = 0
+    if move.category != "Other" and move.bap != "--":
+        if move.bap == "??":
+            _return = -10
+        elif move.category == "Physical":
+            if move.bap == "6 or 11":
+                _return = 6
+
+            else:
+                _return = int(move.bap)
+        else:
+            _return = int(move.bap)
+    return int(_return)
 
 def effective_bap(move, pokemon):
     _return = 0
@@ -90,7 +104,7 @@ def calculate_typed_attacks(pokemon, pokemon_type, level):
     for move in temp_moves:
         if move.category == "Other":
             moves.remove(move)
-    moves.sort(key=lambda _move: _move.bap)
+    moves.sort(key= bap, reverse = True)
     return moves
 
 
