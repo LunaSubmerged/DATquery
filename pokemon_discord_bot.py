@@ -260,6 +260,25 @@ async def typeattacks(ctx, *, args):
     embed = embed_builder.typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level)
     await ctx.send(embed=embed)
 
+@bot.command(help = "Input a name to show the priority moves of a pokemon.")
+async def priority(ctx, *, args):
+    count = args.count(",")
+    if count == 0:
+        pokemon_name = args
+        level = 4
+    else:
+        pokemon_name, level_str = args.split(',', 1)
+        level = int(level_str)
+    pokemon = pokemonDb.getPokemon(pokemon_name)
+    if pokemon is not None:
+        priority_moves = filter(lambda move: int(move.priority) > 0 ,pokemon.getMoves())
+        priority_moves = filter(lambda move: int(move.level) <= level, priority_moves)
+        embed = embed_builder.priorityAttacksInfo(pokemon, priority_moves, level)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(f'"{arg}" is not a recognised pokemon.')
+
+
 @bot.command(help = "Input two pokemon and a level(optional).")
 async def matchup(ctx, *, args):
     count = args.count(",")

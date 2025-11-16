@@ -306,6 +306,17 @@ def typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level):
     embed.add_field(name = type_name, value = body)
 
     return embed
+
+def priorityAttacksInfo(pokemon, priority_moves, level):
+    embed = discord.Embed(
+        color = discord.Color.dark_teal(),
+        title = f"{pokemon.name} Priority Attacks At Level {level}",
+    )
+    embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
+    body = ", ".join(move.name for move in priority_moves)
+    embed.add_field(name = "Moves", value = body)
+
+    return embed
 # endregion
 
 # region TYPES
