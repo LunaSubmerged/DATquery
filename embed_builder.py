@@ -299,7 +299,7 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
 def typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
-        title = f"{pokemon.name} {type_name} Attacks.",
+        title = f"{pokemon.name} {type_name} Attacks At Level {level}",
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     body = ", ".join(move.name for move in sorted_type_attacks)
