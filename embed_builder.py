@@ -307,6 +307,8 @@ def typeAttacksInfo(pokemon, type_name, sorted_type_attacks, level):
 
     return embed
 
+def priority (move):
+    return int(move.priority)
 def priorityMovesInfo(pokemon, priority_moves, level):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
@@ -314,10 +316,10 @@ def priorityMovesInfo(pokemon, priority_moves, level):
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     priority_moves = list(priority_moves)
+    priority_moves.sort(key = priority, reverse= True)
     priority_other = filter(lambda move: move.category == "Other", priority_moves)
     priority_attacks = filter(lambda move: move.category != "Other", priority_moves)
     priority_attacks = list(priority_attacks)
-    priority_attacks.sort(key= moves_service.bap, reverse = True)
     attacks = ", ".join(move.name for move in priority_attacks)
     other = ", ".join(move.name for move in priority_other)
     embed.add_field(name = "Attacks", value = attacks)
