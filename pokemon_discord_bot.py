@@ -141,6 +141,16 @@ async def contest(ctx, *, arg):
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
+@bot.command(help = "Input the name of a tag.", aliaes = ["tags"])
+async def tag(ctx, *, tag_name):
+    cleaned_tag_name = "#" + tag_name.capitalize()
+    tagged_moves = list(filter(lambda move: cleaned_tag_name in move.tags ,movesDb.dictionary.values()))
+    if len(tagged_moves) == 0:
+        await ctx.send("could not find any moves with that tag")
+    else:
+        embed = embed_builder.taggedMoves(tag_name, tagged_moves)
+        await ctx.send(embed = embed)
+
 @bot.command(help= "Input a pokemon and a move.")
 async def learn(ctx, *, args):
     if "," in args:

@@ -172,6 +172,15 @@ def contestInfo(move):
         embed.add_field(name="Jam", value= move.jam)
         embed.add_field(name="\u1CBC", value="")
     return embed
+
+def taggedMoves(tag_name, moves_list):
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f"Moves With {tag_name.capitalize()} Tag  ({len(moves_list)} Total)",
+        description= ", ".join(move.name for move in moves_list)
+
+    )
+    return embed
 # endregion
 
 
@@ -195,7 +204,7 @@ def ability_pokemon_list(abilities):
     shared_pokemon_list = set.intersection(*[set(pokemon_list) for pokemon_list in ability_pokemon_lists])
     embed = discord.Embed(
         color=discord.Color.dark_teal(),
-        title=f'Who has {", ".join(ability.name for ability in abilities)} ({len(shared_pokemon_list)} Total)'
+        title=f'Who Has {", ".join(ability.name for ability in abilities)} ({len(shared_pokemon_list)} Total)'
 
     )
 
