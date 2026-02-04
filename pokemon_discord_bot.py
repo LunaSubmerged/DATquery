@@ -137,7 +137,7 @@ async def move(ctx, *, arg):
 async def contest(ctx, *, arg):
     move = movesDb.getMove(arg)
     if move is not None:
-        await ctx.send(embed = embed_builder.contestInfo(move))
+        await ctx.send(embed = embed_builder.contest_info(move))
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
@@ -148,7 +148,7 @@ async def tag(ctx, *, tag_name):
     if len(tagged_moves) == 0:
         await ctx.send("could not find any moves with that tag")
     else:
-        embed = embed_builder.taggedMoves(tag_name, tagged_moves)
+        embed = embed_builder.tagged_moves(tag_name, tagged_moves)
         await ctx.send(embed = embed)
 
 @bot.command(help = "Input the name of a pokemon and a tag.")
@@ -163,11 +163,11 @@ async def pokemontag(ctx, *, args):
         level = int(level)
     pokemon = pokemonDb.getPokemon(pokemon_name)
     cleaned_tag_name = "#" + tag_name.strip().capitalize()
-    tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, pokemon.getMoves()))
+    tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, pokemon.get_moves_level(level)))
     if len(tagged_moves) == 0:
         await ctx.send("could not find any moves with that tag")
     else:
-        embed = embed_builder.pokemonTaggedMoves(cleaned_tag_name, tagged_moves, pokemon)
+        embed = embed_builder.pokemon_tagged_moves(cleaned_tag_name, tagged_moves, pokemon, level)
         await ctx.send(embed = embed)
 
 @bot.command(help= "Input a pokemon and a move.")
@@ -300,7 +300,7 @@ async def priority(ctx, *, args):
         level = int(level_str)
     pokemon = pokemonDb.getPokemon(pokemon_name)
     if pokemon is not None:
-        priority_moves = filter(lambda move: int(move.priority) > 0 ,pokemon.getMoves())
+        priority_moves = filter(lambda move: int(move.priority) > 0, pokemon.get_moves())
         priority_moves = filter(lambda move: int(move.level) <= level, priority_moves)
         embed = embed_builder.priorityMovesInfo(pokemon, priority_moves, level)
         await ctx.send(embed=embed)
