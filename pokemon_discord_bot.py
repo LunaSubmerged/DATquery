@@ -8,7 +8,7 @@ import databases
 import embed_builder
 import moves_service
 
-from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, initialize_dbs
+from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, initialize_dbs, disciplineDb
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
@@ -117,12 +117,19 @@ async def condition(ctx, *, arg):
 
 @bot.command(help = "Input a name to show the description of an item.")
 async def item(ctx, *, arg):
-    item = itemsDb.getItem(arg)
+    item = itemsDb.get_item(arg)
     if item is not None:
-        await ctx.send(embed = embed_builder.itemInfo(item))
+        await ctx.send(embed = embed_builder.item_info(item))
     else:
         await ctx.sent(f'"{arg}" is not a recognised item.')
 
+@bot.command(help = "Input a name to show the description of a discipline.")
+async def discipline(ctx, *, arg):
+    discipline = disciplineDb.get_discipline(arg)
+    if discipline is not None:
+        await ctx.send(embed = embed_builder.discipline_info(discipline))
+    else:
+        await ctx.sent(f'"{arg}" is not a recognised discipline.')
 
 @bot.command(help= "Input a name to show the description of a move.")
 async def move(ctx, *, arg):
@@ -141,7 +148,7 @@ async def contest(ctx, *, arg):
     else:
         await ctx.sent(f'"{arg}" is not a recognised move.')
 
-@bot.command(help = "Input the name of a tag.", aliaes = ["tags"])
+@bot.command(help = "Input the name of a tag.", aliases = ["tags"])
 async def tag(ctx, *, tag_name):
     cleaned_tag_name = "#" + tag_name.capitalize()
     tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, movesDb.dictionary.values()))
@@ -151,7 +158,7 @@ async def tag(ctx, *, tag_name):
         embed = embed_builder.tagged_moves(tag_name, tagged_moves)
         await ctx.send(embed = embed)
 
-@bot.command(help = "Input the name of a pokemon and a tag.")
+@bot.command(help = "Input the name of a pokemon and a tag.", aliases = ["montag, ptag"])
 async def pokemontag(ctx, *, args):
     count = args.count(",")
     level = 4
@@ -237,7 +244,7 @@ async def strongestattacks(ctx, *, args):
         level = 4
     pokemon = pokemonDb.getPokemon(pokemon_name)
     highestBapMoves = moves_service.calculate_strongest_attacks(pokemon, level)
-    embed = embed_builder.strongestAttacksInfo(pokemon, level, highestBapMoves)
+    embed = embed_builder.strongest_attacks_info(pokemon, level, highestBapMoves)
     await ctx.send(embed = embed)
 
 
@@ -256,7 +263,7 @@ async def seattacks(ctx, *, args):
     attacker = pokemonDb.getPokemon(attacker)
     defender = pokemonDb.getPokemon(defender)
     sorted_se_attacks_by_type = moves_service.calculate_se_attacks(attacker, defender, level)
-    embed = embed_builder.seAttacksInfo(attacker, defender, sorted_se_attacks_by_type, level)
+    embed = embed_builder.se_attacks_info(attacker, defender, sorted_se_attacks_by_type, level)
 
     await ctx.send(embed = embed)
 
@@ -314,9 +321,9 @@ async def matchup(ctx, *, args):
     pokemon2 = pokemonDb.getPokemon(pokemon2_name)
     sortedSeAttacksByType1 = moves_service.calculate_se_attacks(pokemon1, pokemon2, level)
     sortedSeAttacksByType2 = moves_service.calculate_se_attacks(pokemon2, pokemon1, level)
-    embed1 = embed_builder.seAttacksInfo(pokemon1, pokemon2, sortedSeAttacksByType1, level)
+    embed1 = embed_builder.se_attacks_info(pokemon1, pokemon2, sortedSeAttacksByType1, level)
 
-    embed2 = embed_builder.seAttacksInfo(pokemon2, pokemon1, sortedSeAttacksByType2, level)
+    embed2 = embed_builder.se_attacks_info(pokemon2, pokemon1, sortedSeAttacksByType2, level)
 
     await ctx.send(embed = embed1)
     await ctx.send(embed = embed2)

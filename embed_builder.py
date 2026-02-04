@@ -242,7 +242,7 @@ def conditionInfo(condition):
 
 # region ITEMS
 
-def itemInfo(item):
+def item_info(item):
     if item is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -254,10 +254,23 @@ def itemInfo(item):
 
 # endregion
 
+# region DISCIPLINES
+def discipline_info(discipline):
+    if discipline is not None:
+        embed = discord.Embed(
+            color=discord.Color.dark_teal(),
+            title=discipline.name,
+            description=f"*{discipline.flavor}*"
+        )
+        embed.add_field(name="Description", value=discipline.effect, inline=False)
+        embed.add_field(name="Level", value=discipline.level, inline=True)
+        embed.add_field(name="Tag", value=discipline.tag, inline=True)
+        return embed
+# endregion
 
 # region ATTACKS
 
-def strongestAttacksInfo(pokemon, level, highestBapMoves):
+def strongest_attacks_info(pokemon, level, highest_bap_moves):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = pokemon.name,
@@ -266,12 +279,12 @@ def strongestAttacksInfo(pokemon, level, highestBapMoves):
 
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + pokemon.showdown_alias + ".png")
     noAttacks = []
-    for key in highestBapMoves:
-        if highestBapMoves[key] is not None:
+    for key in highest_bap_moves:
+        if highest_bap_moves[key] is not None:
             name = key.title()
             if name in pokemon.typing:
                 name = f"{name}(STAB)"
-            embed.add_field(name = name, value = highestBapMoves[key].name)
+            embed.add_field(name = name, value = highest_bap_moves[key].name)
         else:
             noAttacks.append(key.title())
     noAttacksStr = ", ".join(noAttacks)
@@ -279,7 +292,7 @@ def strongestAttacksInfo(pokemon, level, highestBapMoves):
     return embed
 
 
-def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
+def se_attacks_info(attacker, defender, sorted_se_attacks_by_type, level):
     embed = discord.Embed(
         color = discord.Color.dark_teal(),
         title = f"{attacker.name} VS {defender.name}",
@@ -287,14 +300,14 @@ def seAttacksInfo(attacker, defender, sortedSeAttacksByType, level):
     )
     embed.set_thumbnail(url = "https://play.pokemonshowdown.com/sprites/bw/" + attacker.showdown_alias + ".png")
     localTypeChart = type_calculator.get_type_chart_pokemon(defender)
-    for moveType in sortedSeAttacksByType:
+    for moveType in sorted_se_attacks_by_type:
         name = moveType.title()
         if name in attacker.typing:
             name = f"{name}(STAB)"
 
         if localTypeChart[type_calculator.typesDictionary[moveType]] >= 4:
             name = f"{name}(4X)"
-        sortedStr = ", ".join([move.name for move in sortedSeAttacksByType[moveType]])
+        sortedStr = ", ".join([move.name for move in sorted_se_attacks_by_type[moveType]])
         embed.add_field(name = name, value = sortedStr)
 
     return embed

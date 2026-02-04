@@ -10,6 +10,7 @@ from databases.abilities_db import AbilityDatabase
 from databases.pokemon_db import PokemonDatabase
 from databases.conditions_db import ConditionDatabase
 from databases.items_db import ItemDatabase
+from databases.disciplines_db import DisciplineDatabase
 
 
 movesDb = MoveDatabase()
@@ -17,9 +18,10 @@ pokemonDb = PokemonDatabase()
 abilitiesDb = AbilityDatabase()
 conditionsDb = ConditionDatabase()
 itemsDb = ItemDatabase()
+disciplineDb = DisciplineDatabase()
 
 last_refresh_time = None
-all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]
+all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, disciplineDb]
 
 
 def attachMoves():

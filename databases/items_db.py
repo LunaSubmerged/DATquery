@@ -26,5 +26,5 @@ class ItemDatabase(Database):
             item = Item(**local_item)
             self.dictionary[local_item["name"].lower()] = item
 
-    def getItem(self, name):
+    def get_item(self, name):
         return utils.fuzzySearch(name, self.dictionary)
