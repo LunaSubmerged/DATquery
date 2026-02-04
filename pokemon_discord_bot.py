@@ -98,7 +98,7 @@ async def ability(ctx, *, arg):
     else:
         await ctx.send(f'"{arg}" is not a recognised ability.')
 
-@bot.command(help = "Input a list of abilities.", aliaes = ["hasabilities", "whohas"])
+@bot.command(help = "Input a list of abilities.", aliases = ["hasabilities", "whohas"])
 async def hasability(ctx, *, input_ability_names):
     ability_names = input_ability_names.split(',')
     abilities = [abilitiesDb.getAbility(ability_name) for ability_name in ability_names]
@@ -123,7 +123,7 @@ async def item(ctx, *, arg):
     else:
         await ctx.sent(f'"{arg}" is not a recognised item.')
 
-@bot.command(help = "Input a name to show the description of a discipline.")
+@bot.command(help = "Input a name to show the description of a discipline.", aliases = ["disc"])
 async def discipline(ctx, *, arg):
     discipline = disciplineDb.get_discipline(arg)
     if discipline is not None:
@@ -158,7 +158,7 @@ async def tag(ctx, *, tag_name):
         embed = embed_builder.tagged_moves(tag_name, tagged_moves)
         await ctx.send(embed = embed)
 
-@bot.command(help = "Input the name of a pokemon and a tag.", aliases = ["montag, ptag"])
+@bot.command(help = "Input the name of a pokemon and a tag.", aliases = ["montag", "ptag"])
 async def pokemontag(ctx, *, args):
     count = args.count(",")
     level = 4
