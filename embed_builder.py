@@ -30,7 +30,7 @@ def pokemonInfo(pokemon):
         if pokemon.movesList is not None:
             _move_types = moves_service.count_moves_by_category(pokemon)
             embed.add_field(name=f'Moves - {sum(_move_types)}', value = f'({_move_types[0]} Phys | {_move_types[1]} Spec | {_move_types[2]} Other)', inline=False)
-            all_moves = pokemon.getMoves()
+            all_moves = pokemon.get_moves()
             all_moves.sort(key= lambda x: len(x.pokemon_list))
             embed.add_field(name="Rarest Moves", value = f'{all_moves[0].name} ({len(all_moves[0].pokemon_list)}), {all_moves[1].name} ({len(all_moves[1].pokemon_list)}), {all_moves[2].name} ({len(all_moves[2].pokemon_list)})', inline=False)
         if pokemon.signature_move != "":
@@ -129,9 +129,9 @@ def move_pokemon_list(moves):
 def can_combo(pokemon, move_1, move_2):
     required_level = max(move_1.level, move_2.level)
     reasons = []
-    if not move_1 in pokemon.getMoves():
+    if not move_1 in pokemon.get_moves():
         reasons.append(f'{pokemon.name} does not learn {move_1.name}.')
-    if not move_2 in pokemon.getMoves():
+    if not move_2 in pokemon.get_moves():
         reasons.append(f'{pokemon.name} does not learn {move_2.name}.')
     if move_1.combo_lvl == "Banned":
         reasons.append(f'{move_1.name} is banned.')
@@ -156,7 +156,7 @@ def can_combo(pokemon, move_1, move_2):
     embed.description = description
     return embed
 
-def contestInfo(move):
+def contest_info(move):
     if move is not None:
         embed = discord.Embed(
             color = discord.Color.dark_teal(),
@@ -173,11 +173,19 @@ def contestInfo(move):
         embed.add_field(name="\u1CBC", value="")
     return embed
 
-def taggedMoves(tag_name, moves_list):
+def tagged_moves(tag_name, moves_list):
     embed = discord.Embed(
         color=discord.Color.dark_teal(),
         title=f"Moves With {tag_name.capitalize()} Tag  ({len(moves_list)} Total)",
         description= ", ".join(move.name for move in moves_list)
+
+    )
+    return embed
+def pokemon_tagged_moves(tag_name, moves_list, pokemon, level):
+    embed = discord.Embed(
+        color=discord.Color.dark_teal(),
+        title=f"Moves With {tag_name} Tag Known by {pokemon.name} at Level {level} ({len(moves_list)} Total)",
+        description=", ".join(move.name for move in moves_list)
 
     )
     return embed

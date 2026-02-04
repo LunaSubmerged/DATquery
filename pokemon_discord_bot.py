@@ -144,11 +144,30 @@ async def contest(ctx, *, arg):
 @bot.command(help = "Input the name of a tag.", aliaes = ["tags"])
 async def tag(ctx, *, tag_name):
     cleaned_tag_name = "#" + tag_name.capitalize()
-    tagged_moves = list(filter(lambda move: cleaned_tag_name in move.tags ,movesDb.dictionary.values()))
+    tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, movesDb.dictionary.values()))
     if len(tagged_moves) == 0:
         await ctx.send("could not find any moves with that tag")
     else:
         embed = embed_builder.taggedMoves(tag_name, tagged_moves)
+        await ctx.send(embed = embed)
+
+@bot.command(help = "Input the name of a pokemon and a tag.")
+async def pokemontag(ctx, *, args):
+    count = args.count(",")
+    level = 4
+
+    if count == 1:
+        pokemon_name, tag_name = args.split(',', 1)
+    else:
+        pokemon_name, tag_name, level = args.split(',', 2)
+        level = int(level)
+    pokemon = pokemonDb.getPokemon(pokemon_name)
+    cleaned_tag_name = "#" + tag_name.strip().capitalize()
+    tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, pokemon.getMoves()))
+    if len(tagged_moves) == 0:
+        await ctx.send("could not find any moves with that tag")
+    else:
+        embed = embed_builder.pokemonTaggedMoves(cleaned_tag_name, tagged_moves, pokemon)
         await ctx.send(embed = embed)
 
 @bot.command(help= "Input a pokemon and a move.")

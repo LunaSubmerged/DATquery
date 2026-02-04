@@ -12,11 +12,20 @@ class Pokemon:
         self.is_fully_evolved = True
 
 
-    def getMoves(self):
+    def get_moves(self):
         moves_list = []
         if self.movesList is not None:
             for move_level_list in self.movesList:
                 for move in move_level_list:
+                    moves_list.append(move)
+
+        return moves_list
+
+    def get_moves_level(self, level):
+        moves_list = []
+        if self.movesList is not None:
+            for n in range(level + 1):
+                for move in self.movesList[n]:
                     moves_list.append(move)
 
         return moves_list

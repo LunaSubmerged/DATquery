@@ -85,7 +85,7 @@ def attachMoves():
             unevolved_pokemon = pokemonDb.getPokemon(pokemon_row[10])
             if not unevolved_pokemon.name in pokemon.name:
                 unevolved_pokemon.is_fully_evolved = False
-                for move in unevolved_pokemon.getMoves():
+                for move in unevolved_pokemon.get_moves():
                     if unevolved_pokemon in move.pokemon_list:
                         move.pokemon_list.remove(unevolved_pokemon)
 
@@ -109,7 +109,7 @@ def attachMoves():
                         move.level = level
 
             if pokemon.is_fully_evolved:
-                for move in pokemon.getMoves():
+                for move in pokemon.get_moves():
                     move.pokemon_list.append(pokemon)
 
 def set_up_abilities():
