@@ -9,7 +9,6 @@ from databases.moves_db import MoveDatabase
 from databases.abilities_db import AbilityDatabase
 from databases.pokemon_db import PokemonDatabase
 from databases.conditions_db import ConditionDatabase
-from databases.natures_db import NatureDatabase
 from databases.items_db import ItemDatabase
 
 
@@ -18,7 +17,6 @@ pokemonDb = PokemonDatabase()
 abilitiesDb = AbilityDatabase()
 conditionsDb = ConditionDatabase()
 itemsDb = ItemDatabase()
-naturesDb = NatureDatabase()
 
 last_refresh_time = None
 all_dbs = [abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb]

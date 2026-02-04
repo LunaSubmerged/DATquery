@@ -255,20 +255,6 @@ def itemInfo(item):
 # endregion
 
 
-# region NATURES
-
-def natureInfo(nature):
-    if nature is not None:
-        embed = discord.Embed(
-            color = discord.Color.dark_teal(),
-            title = nature.name,
-            description = nature.description
-        )
-        return embed
-
-# endregion
-
-
 # region ATTACKS
 
 def strongestAttacksInfo(pokemon, level, highestBapMoves):

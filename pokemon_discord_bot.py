@@ -8,7 +8,7 @@ import databases
 import embed_builder
 import moves_service
 
-from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, naturesDb, initialize_dbs
+from databases import abilitiesDb, movesDb, pokemonDb, itemsDb, conditionsDb, initialize_dbs
 from dotenv import load_dotenv
 from discord.ext import commands
 from calculator import calculate
@@ -199,17 +199,6 @@ async def combo(ctx, *, args):
         await ctx.send(embed=embed)
     else:
         await ctx.sent("That was not correctly formated. Input should be pokemon, move, move")
-
-
-
-@bot.command(help= "Input a name to show the description of a nature.")
-async def nature(ctx, *, arg):
-    nature = naturesDb.getNature(arg)
-    if nature is not None:
-        await ctx.send(embed = embed_builder.natureInfo(nature))
-    else:
-        await ctx.sent(f'"{arg}" is not a recognised nature.')
-
 
 @bot.command(help = "Evaluate a maths expression.")
 async def calc(ctx, *, arg):
