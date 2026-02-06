@@ -150,7 +150,7 @@ async def contest(ctx, *, arg):
 
 @bot.command(help = "Input the name of a tag.", aliases = ["tags"])
 async def tag(ctx, *, tag_name):
-    cleaned_tag_name = "#" + tag_name.capitalize()
+    cleaned_tag_name = "#" + tag_name.title()
     tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, movesDb.dictionary.values()))
     if len(tagged_moves) == 0:
         await ctx.send("could not find any moves with that tag")
@@ -169,7 +169,7 @@ async def pokemontag(ctx, *, args):
         pokemon_name, tag_name, level = args.split(',', 2)
         level = int(level)
     pokemon = pokemonDb.getPokemon(pokemon_name)
-    cleaned_tag_name = "#" + tag_name.strip().capitalize()
+    cleaned_tag_name = "#" + tag_name.strip().title()
     tagged_moves = list(filter(lambda _move: cleaned_tag_name in _move.tags, pokemon.get_moves_level(level)))
     if len(tagged_moves) == 0:
         await ctx.send("could not find any moves with that tag")
